@@ -5,6 +5,7 @@ import com.project.chatop.features.auth.web.dtos.LoginRequest;
 import com.project.chatop.features.auth.web.dtos.RegisterRequest;
 import com.project.chatop.features.auth.web.dtos.AuthResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -29,14 +30,15 @@ public class AuthController {
         //TODO: Faire la gestion d'exception
         AuthResponse authResponse = authService.setRegister(registerRequest);
         return ResponseEntity
-                .status(HttpStatusCode.valueOf(201))
+                .status(HttpStatus.CREATED)
                 .body(authResponse);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         //TODO: Faire la gestion d'exception 401
         AuthResponse authResponse = authService.setLogin(loginRequest);
         return ResponseEntity.ok(authResponse);
     }
+
 }
