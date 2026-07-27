@@ -20,9 +20,9 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/auth/register").permitAll()
-                                .requestMatchers("/auth/login").permitAll()
-                                .requestMatchers("/swagger/**").permitAll()
+                                .requestMatchers("/api/auth/register").permitAll()
+                                .requestMatchers("/api/auth/login").permitAll()
+                                .requestMatchers("/api/swagger/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .build();
