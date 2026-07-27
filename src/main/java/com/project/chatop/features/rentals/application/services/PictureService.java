@@ -20,6 +20,11 @@ public class PictureService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    @Value("${app.api.base-url}")
+    private String baseUrl;
+
+
+
     public String saveImage(MultipartFile file) throws IOException {
 
         if(file.isEmpty()) {
@@ -50,11 +55,15 @@ public class PictureService {
         Path filePath = uploadPath.resolve(fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        return fileName;
+        return getUrl(fileName);
     }
 
     public Resource getImage(String filename) throws MalformedURLException {
         Path filePath = Paths.get(uploadDir).resolve(filename);
         return new UrlResource(filePath.toUri());
+    }
+
+    private String getUrl(String fileName) {
+        return baseUrl + "/api/rentals/images/" + fileName;
     }
 }

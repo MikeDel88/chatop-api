@@ -13,14 +13,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class RentalMapper {
 
-    @Value("${app.api.base-url}")
-    private String baseUrl;
-
-    private String getUrl(String fileName) {
-        return baseUrl + "/api/rentals/images/" + fileName;
-    }
-
-    public Rental toRental(Long rentalId, RentalRequest rentalRequest, String fileName, User owner) {
+    public Rental toRental(Long rentalId, RentalRequest rentalRequest, String pictureUrl, User owner) {
         if (rentalRequest == null) {
             return null;
         }
@@ -29,7 +22,7 @@ public class RentalMapper {
                 rentalRequest.name(),
                 rentalRequest.surface(),
                 rentalRequest.price(),
-                getUrl(fileName),
+                pictureUrl,
                 rentalRequest.description(),
                 owner,
                 LocalDateTime.now(),

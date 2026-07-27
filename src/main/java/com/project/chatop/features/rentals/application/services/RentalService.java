@@ -54,20 +54,23 @@ public class RentalService {
 
     public ConfirmResponse create(RentalRequest rentalRequest, Long userId) {
         try {
+
             User owner = this.userRepository.findUserById(userId);
             if(owner == null){
-                throw new UserNotFoundException();
+                throw new RentalNotCreatedException();
             }
-            String fileName = pictureService.saveImage(rentalRequest.picture());
-            Rental rental = rentalMapper.toRental(null, rentalRequest, fileName, owner);
+            String url = pictureService.saveImage(rentalRequest.picture());
+            Rental rental = rentalMapper.toRental(null, rentalRequest, url, owner);
             this.rentalRepository.save(rental);
             return new ConfirmResponse("Rental created !");
+
         } catch (Exception e) {
             throw new RentalNotCreatedException();
         }
     }
 
     public ConfirmResponse update(RentalRequest rentalRequest, Long userId, Long rentalId) {
+        //TODO: Finaliser l'update.
         return new ConfirmResponse("Rental updated !");
     }
 
