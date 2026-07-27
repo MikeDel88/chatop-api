@@ -17,9 +17,9 @@ public class UserMapper {
         }
 
         return new User(
-                0,
-                registerRequest.name(),
+                null,
                 registerRequest.email(),
+                registerRequest.name(),
                 hashEncoder.encode(registerRequest.password()),
                 LocalDateTime.now(),
                 LocalDateTime.now()
