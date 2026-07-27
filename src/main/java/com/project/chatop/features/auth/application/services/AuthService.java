@@ -1,9 +1,9 @@
 package com.project.chatop.features.auth.application.services;
 
-import com.project.chatop.features.auth.application.mappers.UserMapper;
+import com.project.chatop.features.users.application.mappers.UserMapper;
 import com.project.chatop.features.auth.application.utils.HashEncoder;
-import com.project.chatop.features.auth.domain.entities.User;
-import com.project.chatop.features.auth.domain.repositories.UserRepository;
+import com.project.chatop.features.users.domain.entities.User;
+import com.project.chatop.features.users.domain.repositories.UserRepository;
 import com.project.chatop.features.auth.web.dtos.AuthResponse;
 import com.project.chatop.features.auth.web.dtos.LoginRequest;
 import com.project.chatop.features.auth.web.dtos.RegisterRequest;

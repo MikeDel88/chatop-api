@@ -1,6 +1,6 @@
-package com.project.chatop.features.auth.domain.repositories;
+package com.project.chatop.features.users.domain.repositories;
 
-import com.project.chatop.features.auth.domain.entities.User;
+import com.project.chatop.features.users.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {

@@ -1,8 +1,8 @@
-package com.project.chatop.features.auth.application.mappers;
+package com.project.chatop.features.users.application.mappers;
 
 
 import com.project.chatop.features.auth.application.utils.HashEncoder;
-import com.project.chatop.features.auth.domain.entities.User;
+import com.project.chatop.features.users.domain.entities.User;
 import com.project.chatop.features.auth.web.dtos.RegisterRequest;
 import org.springframework.stereotype.Component;
 

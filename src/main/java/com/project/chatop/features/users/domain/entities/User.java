@@ -1,4 +1,4 @@
-package com.project.chatop.features.auth.domain.entities;
+package com.project.chatop.features.users.domain.entities;
 
 import jakarta.persistence.*;
 
