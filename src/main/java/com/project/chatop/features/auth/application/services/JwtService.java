@@ -11,14 +11,8 @@ import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
 
-enum JWT_TYPE {
-    ACCESS
-}
 
-enum JWT_ROLE {
-    ADMIN,
-    USER
-}
+
 
 @Service
 public class JwtService {
@@ -28,15 +22,18 @@ public class JwtService {
     private final Long EXPIRATION_TIME = 30L * 24 * 60 * 60 * 1000L;
 
     private final String keyType = "type";
-    private final String keyRole = "role";
+
+    private enum JWT_TYPE {
+        ACCESS
+    }
 
     public JwtService(@Value("${jwt.secret}") String jwtSecret) {
         byte[] jwtDecode = Base64.getDecoder().decode(jwtSecret);
         this.secretKey = Keys.hmacShaKeyFor(jwtDecode);
     }
 
-    public String generateAccessToken(String userId, JWT_ROLE role) {
-        return generateToken(userId, JWT_TYPE.ACCESS, role, EXPIRATION_TIME);
+    public String generateAccessToken(String userId) {
+        return generateToken(userId, JWT_TYPE.ACCESS, EXPIRATION_TIME);
     }
 
     public Boolean validateAccessToken(String token) {
@@ -44,13 +41,10 @@ public class JwtService {
         if(claims == null)
             return false;
 
-        if(!claims.containsKey(this.keyType) || !(claims.get(this.keyType) instanceof JWT_TYPE tokenType))
+        if(!claims.containsKey(this.keyType) || !(claims.get(this.keyType) instanceof String tokenType))
             return false;
 
-        if(!claims.containsKey(this.keyRole) || !(claims.get(this.keyRole) instanceof JWT_ROLE))
-            return false;
-
-        return tokenType == JWT_TYPE.ACCESS;
+        return tokenType.equalsIgnoreCase(JWT_TYPE.ACCESS.name());
     }
 
     public String getUserIdFromToken(String token) {
@@ -62,13 +56,12 @@ public class JwtService {
         return claims.getSubject();
     }
 
-    private String generateToken(String subject, JWT_TYPE type , JWT_ROLE role, Long expiry) {
+    private String generateToken(String subject, JWT_TYPE type, Long expiry) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiry);
         return Jwts.builder()
                 .subject(subject)
                 .claim(this.keyType, type)
-                .claim(this.keyRole, role)
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(secretKey, Jwts.SIG.HS256)
