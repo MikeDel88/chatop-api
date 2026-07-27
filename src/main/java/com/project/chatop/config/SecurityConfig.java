@@ -1,23 +1,36 @@
 package com.project.chatop.config;
 
+import com.project.chatop.features.auth.application.utils.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @Configuration
 public class SecurityConfig {
 
+    private final JwtAuthFilter jwtAuthFilter;
+
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+        this.jwtAuthFilter = jwtAuthFilter;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
         return httpSecurity
+                // Désactivation CSRF (Formulaires et FormLogin par défaut).
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
+                // Pour l'API en mode Stateless (pas d'était de sessions)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                // Autorisations des routes.
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers("/api/auth/register").permitAll()
@@ -25,6 +38,13 @@ public class SecurityConfig {
                                 .requestMatchers("/api/swagger/**").permitAll()
                                 .anyRequest().authenticated()
                 )
+                // Renvoi 401 au lieu de 403 en cas d'erreur principale.
+                .exceptionHandling ( configurer ->
+                    configurer
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                )
+                // Ajout d'un filtre pour vérifier le token et enregistrer l'authentification.
+                .addFilterBefore(this.jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
