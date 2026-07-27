@@ -1,5 +1,6 @@
 package com.project.chatop.features.auth.application.services;
 
+import com.project.chatop.features.auth.web.exceptions.BadAuthenticationException;
 import com.project.chatop.features.users.application.mappers.UserMapper;
 import com.project.chatop.features.auth.application.utils.HashEncoder;
 import com.project.chatop.features.users.domain.entities.User;
@@ -15,40 +16,53 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final HashEncoder hashEncoder;
+    private final JwtService jwtService;
 
     public AuthService(
             UserRepository repo,
             UserMapper userMapper,
-            HashEncoder hashEncoder
+            HashEncoder hashEncoder,
+            JwtService jwtService
     ) {
         this.userRepository = repo;
         this.userMapper = userMapper;
         this.hashEncoder = hashEncoder;
+        this.jwtService = jwtService;
     }
 
     public AuthResponse setRegister(RegisterRequest registerRequest) {
-        //TODO: Ajouter la gestion du token JWT
         User user = this.userMapper.toUser(registerRequest, hashEncoder);
-        this.userRepository.save(user);
-        return new AuthResponse("jwt");
-    }
-
-    public AuthResponse setLogin(LoginRequest loginRequest) throws Exception {
-        //TODO: Ajouter la gestion du token JWT
-        String email = loginRequest.email();
-        String password = loginRequest.password();
-        User user = this.userRepository.findUserByEmail(email);
-
-        String fakeHash = "2a107s46EoKwqgSCgL58gT47VOEeeaTfkeWI9eVIdSxM91Ku9lCRmsWmG";
-        String hashPassword = user == null ? fakeHash : user.password();
-
-        Boolean isAuthenticated = hashEncoder.matches(password, hashPassword);
-
-        if(!isAuthenticated) {
-            throw new Exception("Invalid Login Credentials");
+        try {
+            User userSaved = this.userRepository.save(user);
+            return createResponse(userSaved);
+        } catch (Exception e) {
+            throw new BadAuthenticationException("Une erreur est survenue lors de l'enregistrement");
         }
 
-        return new AuthResponse("jwt");
+    }
+
+    public AuthResponse setLogin(LoginRequest loginRequest) {
+
+        User user = this.userRepository.findUserByEmail(loginRequest.email());
+
+        if(!this.isAuthenticated(loginRequest, user)) {
+            throw new BadAuthenticationException("Une erreur est survenue lors de la connexion");
+        }
+
+        assert user != null;
+        return createResponse(user);
+    }
+
+    private AuthResponse createResponse(User user) {
+        String token = jwtService.generateAccessToken(String.valueOf(user.getId()));
+        return new AuthResponse(token);
+    }
+
+    private Boolean isAuthenticated(LoginRequest request, User user) {
+        String fakeHash = "2a107s46EoKwqgSCgL58gT47VOEeeaTfkeWI9eVIdSxM91Ku9lCRmsWmG";
+        String hashPassword = user == null ? fakeHash : user.getPassword();
+
+        return hashEncoder.matches(request.password(), hashPassword);
     }
 
 }
