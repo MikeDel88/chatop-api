@@ -2,7 +2,7 @@ package com.project.chatop.features.auth.web.exceptions;
 
 
 import com.project.chatop.features.auth.web.controllers.AuthController;
-import com.project.chatop.common.dtos.ErrorResponse;
+import com.project.chatop.common.web.dtos.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

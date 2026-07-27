@@ -1,4 +1,4 @@
-package com.project.chatop.common.exceptions;
+package com.project.chatop.common.web.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
