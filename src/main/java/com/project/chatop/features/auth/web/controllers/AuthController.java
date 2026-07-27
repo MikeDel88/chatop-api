@@ -27,7 +27,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        //TODO: Faire la gestion d'exception
         AuthResponse authResponse = authService.setRegister(registerRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -36,7 +35,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        //TODO: Faire la gestion d'exception 401
         AuthResponse authResponse = authService.setLogin(loginRequest);
         return ResponseEntity.ok(authResponse);
     }
