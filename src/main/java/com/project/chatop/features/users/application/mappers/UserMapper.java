@@ -8,6 +8,7 @@ import com.project.chatop.features.users.web.dtos.UserResponse;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class UserMapper {
@@ -31,12 +32,16 @@ public class UserMapper {
         if(user == null) {
             return null;
         }
+
+        String europeanDatePattern = "yyyy/MM/dd";
+        DateTimeFormatter europeanDateFormatter = DateTimeFormatter.ofPattern(europeanDatePattern);
+
         return new UserResponse(
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.getCreatedAt().toString(),
-                user.getUpdatedAt().toString()
+                europeanDateFormatter.format(user.getCreatedAt()),
+                europeanDateFormatter.format(user.getUpdatedAt())
         );
     }
 }
