@@ -4,15 +4,14 @@ import com.project.chatop.features.auth.application.services.AuthService;
 import com.project.chatop.features.auth.web.dtos.LoginRequest;
 import com.project.chatop.features.auth.web.dtos.RegisterRequest;
 import com.project.chatop.features.auth.web.dtos.AuthResponse;
+import com.project.chatop.features.users.application.services.UserService;
+import com.project.chatop.features.users.web.dtos.UserResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -20,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
+        this.userService = userService;
     }
 
     @PostMapping("/register")
@@ -37,6 +38,11 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         AuthResponse authResponse = authService.setLogin(loginRequest);
         return ResponseEntity.ok(authResponse);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> me(@AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(userService.getUser(userId));
     }
 
 }
