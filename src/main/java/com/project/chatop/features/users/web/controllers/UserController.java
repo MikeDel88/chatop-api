@@ -1,6 +1,8 @@
 package com.project.chatop.features.users.web.controllers;
 
+import com.project.chatop.features.users.application.mappers.UserMapper;
 import com.project.chatop.features.users.application.services.UserService;
+import com.project.chatop.features.users.domain.entities.User;
 import com.project.chatop.features.users.web.dtos.UserResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -15,13 +17,16 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUser(@Valid @Positive @NotNull @PathVariable String id) {
-        return ResponseEntity.ok(this.userService.getUser(Long.valueOf(id)));
+        User user = this.userService.getUser(Long.valueOf(id));
+        return ResponseEntity.ok(userMapper.toUserResponse(user));
     }
 }
