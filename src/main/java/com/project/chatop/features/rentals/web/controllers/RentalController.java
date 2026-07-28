@@ -9,6 +9,8 @@ import com.project.chatop.features.rentals.web.dtos.RentalResponse;
 import com.project.chatop.features.rentals.web.dtos.RentalsResponse;
 import com.project.chatop.features.rentals.web.exceptions.RentalNotCreatedException;
 import com.project.chatop.features.rentals.web.exceptions.RentalNotUpdatedException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Tag(name = "Rentals", description = "Gestion des locations")
 @RequestMapping("/api/rentals")
 public class RentalController {
 
@@ -32,6 +35,7 @@ public class RentalController {
         this.rentalMapper = rentalMapper;
     }
 
+    @Operation(summary = "Récupération de la liste des locations.")
     @GetMapping
     public ResponseEntity<RentalsResponse> getAll() {
         List<Rental> rentals = this.rentalService.getAll();
@@ -44,12 +48,14 @@ public class RentalController {
     }
 
 
+    @Operation(summary = "Récupération d'une location par son identifiant.")
     @GetMapping("{id}")
     public ResponseEntity<RentalResponse> getById(@Valid @Positive @NotNull @PathVariable Long id) {
         Rental rental = this.rentalService.getById(id);
         return ResponseEntity.ok(rentalMapper.toRentalResponse(rental));
     }
 
+    @Operation(summary = "Création d'une location")
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ConfirmResponse> create(
         @AuthenticationPrincipal Long userId,
@@ -63,6 +69,7 @@ public class RentalController {
         }
     }
 
+    @Operation(summary = "Mise à jour d'une location par son identifiant.")
     @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ConfirmResponse> update(
         @Valid @ModelAttribute RentalRequest rentalRequest,
