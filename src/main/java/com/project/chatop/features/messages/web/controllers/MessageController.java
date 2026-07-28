@@ -28,7 +28,7 @@ public class MessageController {
     public ResponseEntity<ConfirmResponse> sendMessage(@Valid @RequestBody MessageRequest messageRequest) {
         if(messageService.create(messageRequest) != null) {
             ConfirmResponse confirmResponse = new ConfirmResponse("Message send with success");
-            return ResponseEntity.status(HttpStatus.OK).body(confirmResponse);
+            return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
         } else {
             throw new MessageNotCreatedException();
         }
