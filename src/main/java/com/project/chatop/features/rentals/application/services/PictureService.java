@@ -17,7 +17,7 @@ import java.util.UUID;
 @Service
 public class PictureService {
 
-    @Value("${file.upload-dir}")
+    @Value("${app.upload.dir}")
     private String uploadDir;
 
     @Value("${app.api.base-url}")
@@ -64,6 +64,6 @@ public class PictureService {
     }
 
     private String getUrl(String fileName) {
-        return baseUrl + "/api/rentals/images/" + fileName;
+        return baseUrl + "/images/" + fileName;
     }
 }

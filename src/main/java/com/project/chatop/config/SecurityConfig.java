@@ -36,7 +36,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/auth/register").permitAll()
                                 .requestMatchers("/api/auth/login").permitAll()
                                 .requestMatchers("/api/swagger/**").permitAll()
-                                .requestMatchers("/api/rentals/images/**").permitAll()
+                                .requestMatchers("/images/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 // Renvoi 401 au lieu de 403 en cas d'erreur principale.
