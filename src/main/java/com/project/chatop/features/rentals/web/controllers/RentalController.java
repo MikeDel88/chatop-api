@@ -1,14 +1,17 @@
 package com.project.chatop.features.rentals.web.controllers;
 
 import com.project.chatop.common.web.dtos.ConfirmResponse;
+import com.project.chatop.features.rentals.application.mappers.RentalMapper;
 import com.project.chatop.features.rentals.application.services.RentalService;
+import com.project.chatop.features.rentals.domain.entities.Rental;
 import com.project.chatop.features.rentals.web.dtos.RentalRequest;
 import com.project.chatop.features.rentals.web.dtos.RentalResponse;
+import com.project.chatop.features.rentals.web.dtos.RentalsResponse;
+import com.project.chatop.features.rentals.web.exceptions.RentalNotCreatedException;
+import com.project.chatop.features.rentals.web.exceptions.RentalNotUpdatedException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +25,29 @@ import java.util.List;
 public class RentalController {
 
     private final RentalService rentalService;
+    private final RentalMapper rentalMapper;
 
-    public RentalController(RentalService rentalService) {
+    public RentalController(RentalService rentalService, RentalMapper rentalMapper) {
         this.rentalService = rentalService;
+        this.rentalMapper = rentalMapper;
     }
 
     @GetMapping
-    public ResponseEntity<List<RentalResponse>> getAll() {
-        return  ResponseEntity.ok(this.rentalService.getAll());
+    public ResponseEntity<RentalsResponse> getAll() {
+        List<Rental> rentals = this.rentalService.getAll();
+        List<RentalResponse> rentalsReponse = rentals
+                .stream()
+                .map(rentalMapper::toRentalResponse)
+                .toList();
+
+        return  ResponseEntity.status(HttpStatus.OK).body(new RentalsResponse(rentalsReponse));
+    }
+
+
+    @GetMapping("{id}")
+    public ResponseEntity<RentalResponse> getById(@Valid @Positive @NotNull @PathVariable Long id) {
+        Rental rental = this.rentalService.getById(id);
+        return ResponseEntity.ok(rentalMapper.toRentalResponse(rental));
     }
 
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
@@ -37,28 +55,26 @@ public class RentalController {
         @AuthenticationPrincipal Long userId,
         @Valid @ModelAttribute RentalRequest rentalRequest
     ) {
-        ConfirmResponse confirmResponse = rentalService.create(rentalRequest, userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
+        if(rentalService.create(rentalRequest, userId) != null) {
+            ConfirmResponse confirmResponse = new ConfirmResponse("Rental created !");;
+            return ResponseEntity.status(HttpStatus.OK).body(confirmResponse);
+        } else {
+            throw new RentalNotCreatedException();
+        }
     }
 
     @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ConfirmResponse> update(
-        @AuthenticationPrincipal Long userId,
         @Valid @ModelAttribute RentalRequest rentalRequest,
         @Valid @Positive @NotNull @PathVariable Long id
     ) {
-        ConfirmResponse confirmResponse = rentalService.update(rentalRequest, userId, id);
-        return ResponseEntity.status(HttpStatus.OK).body(confirmResponse);
+        if(rentalService.update(rentalRequest, id) != null) {
+            ConfirmResponse confirmResponse = new ConfirmResponse("Rental updated !");;
+            return ResponseEntity.status(HttpStatus.OK).body(confirmResponse);
+        } else {
+            throw new RentalNotUpdatedException();
+        }
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<RentalResponse> getById(@Valid @Positive @NotNull @PathVariable Long id) {
-        return ResponseEntity.ok(this.rentalService.getById(id));
-    }
-
-    @GetMapping("/images/{filename}")
-    public ResponseEntity<Resource> getImage(@NotBlank @PathVariable String filename) {
-        return this.rentalService.getPicture(filename);
-    }
 
 }

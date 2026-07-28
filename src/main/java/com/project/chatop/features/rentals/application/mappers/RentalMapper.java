@@ -13,12 +13,12 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class RentalMapper {
 
-    public Rental toRental(Long rentalId, RentalRequest rentalRequest, String pictureUrl, User owner) {
+    public Rental toCreateRental(RentalRequest rentalRequest, String pictureUrl, User owner) {
         if (rentalRequest == null) {
             return null;
         }
         return new Rental(
-                rentalId,
+                null,
                 rentalRequest.name(),
                 rentalRequest.surface(),
                 rentalRequest.price(),
@@ -26,6 +26,23 @@ public class RentalMapper {
                 rentalRequest.description(),
                 owner,
                 LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+    }
+
+    public Rental toUpdateRental(Rental rental, RentalRequest rentalRequest) {
+        if (rentalRequest == null || rental == null) {
+            return null;
+        }
+        return new Rental(
+                rental.getId(),
+                rentalRequest.name(),
+                rentalRequest.surface(),
+                rentalRequest.price(),
+                rental.getPicture(),
+                rentalRequest.description(),
+                rental.getOwner(),
+                rental.getCreatedAt(),
                 LocalDateTime.now()
         );
     }
