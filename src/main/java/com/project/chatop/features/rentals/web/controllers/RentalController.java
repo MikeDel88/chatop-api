@@ -1,6 +1,7 @@
 package com.project.chatop.features.rentals.web.controllers;
 
 import com.project.chatop.common.web.dtos.ConfirmResponse;
+import com.project.chatop.common.web.dtos.ErrorResponse;
 import com.project.chatop.features.rentals.application.mappers.RentalMapper;
 import com.project.chatop.features.rentals.application.services.RentalService;
 import com.project.chatop.features.rentals.domain.entities.Rental;
@@ -10,6 +11,10 @@ import com.project.chatop.features.rentals.web.dtos.RentalsResponse;
 import com.project.chatop.features.rentals.web.exceptions.RentalNotCreatedException;
 import com.project.chatop.features.rentals.web.exceptions.RentalNotUpdatedException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +42,16 @@ public class RentalController {
     }
 
     @Operation(summary = "Récupération de la liste des locations.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Les locations ont bien été envoyées",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RentalsResponse.class)) }),
+            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
+                    content = @Content),
+        }
+    )
     @GetMapping
     public ResponseEntity<RentalsResponse> getAll() {
         List<Rental> rentals = this.rentalService.getAll();
@@ -49,6 +65,22 @@ public class RentalController {
 
 
     @Operation(summary = "Récupération d'une location par son identifiant.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "La location a bien été trouvée et envoyée",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RentalResponse.class)) }),
+            @ApiResponse(responseCode = "400", description = "Id invalide",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MethodArgumentNotValidException.class)) }),
+            @ApiResponse(responseCode = "404", description = "Location introuvable",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)) }),
+            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
+                    content = @Content),
+        }
+    )
     @GetMapping("{id}")
     public ResponseEntity<RentalResponse> getById(@Valid @Positive @NotNull @PathVariable Long id) {
         Rental rental = this.rentalService.getById(id);
@@ -56,6 +88,19 @@ public class RentalController {
     }
 
     @Operation(summary = "Création d'une location")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "La location a été créée avec succès",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ConfirmResponse.class)) }),
+            @ApiResponse(responseCode = "400", description = "Le Body est invalide ou Location non créée",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(oneOf = { MethodArgumentNotValidException.class, ErrorResponse.class }))}),
+            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
+                    content = @Content),
+        }
+    )
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ConfirmResponse> create(
         @AuthenticationPrincipal Long userId,
@@ -70,6 +115,21 @@ public class RentalController {
     }
 
     @Operation(summary = "Mise à jour d'une location par son identifiant.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "La location a été mise à jour avec succès",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ConfirmResponse.class)) }),
+            @ApiResponse(responseCode = "400", description = "Le Body est invalide ou Location non mise à jour",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(oneOf = { MethodArgumentNotValidException.class, ErrorResponse.class }))}),
+            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Location qui doit être mise à jour est introuvable",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
+                    content = @Content),
+        }
+    )
     @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ConfirmResponse> update(
         @Valid @ModelAttribute RentalRequest rentalRequest,
