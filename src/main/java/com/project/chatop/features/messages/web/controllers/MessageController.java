@@ -2,6 +2,7 @@ package com.project.chatop.features.messages.web.controllers;
 
 import com.project.chatop.common.web.dtos.ConfirmResponse;
 import com.project.chatop.common.web.dtos.ErrorResponse;
+import com.project.chatop.common.web.dtos.ErrorsResponse;
 import com.project.chatop.features.messages.application.services.MessageService;
 import com.project.chatop.features.messages.web.dtos.MessageRequest;
 import com.project.chatop.features.messages.web.exceptions.MessageNotCreatedException;
@@ -15,7 +16,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +40,7 @@ public class MessageController {
                             schema = @Schema(implementation = ConfirmResponse.class)) }),
             @ApiResponse(responseCode = "400", description = "Le Body est invalide ou Message non créée",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(oneOf = { MethodArgumentNotValidException.class, ErrorResponse.class }))}),
+                            schema = @Schema(oneOf = { ErrorsResponse.class, ErrorResponse.class }))}),
             @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",

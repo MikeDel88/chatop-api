@@ -1,6 +1,7 @@
 package com.project.chatop.features.users.web.controllers;
 
 import com.project.chatop.common.web.dtos.ErrorResponse;
+import com.project.chatop.common.web.dtos.ErrorsResponse;
 import com.project.chatop.features.users.application.mappers.UserMapper;
 import com.project.chatop.features.users.application.services.UserService;
 import com.project.chatop.features.users.domain.entities.User;
@@ -16,7 +17,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,7 +40,7 @@ public class UserController {
                     schema = @Schema(implementation = UserResponse.class)) }),
         @ApiResponse(responseCode = "400", description = "Id invalide",
                 content = { @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = MethodArgumentNotValidException.class)) }),
+                        schema = @Schema(implementation = ErrorsResponse.class)) }),
         @ApiResponse(responseCode = "404", description = "Utilisateur introuvable",
                 content = { @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ErrorResponse.class)) }),

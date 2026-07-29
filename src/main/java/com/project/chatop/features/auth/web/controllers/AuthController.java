@@ -1,6 +1,6 @@
 package com.project.chatop.features.auth.web.controllers;
 
-import com.project.chatop.common.web.dtos.ErrorResponse;
+import com.project.chatop.common.web.dtos.ErrorsResponse;
 import com.project.chatop.features.auth.application.services.AuthService;
 import com.project.chatop.features.auth.web.dtos.LoginRequest;
 import com.project.chatop.features.auth.web.dtos.RegisterRequest;
@@ -21,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,12 +42,12 @@ public class AuthController {
     @Operation(summary = "Créer un compte utilisateur")
     @SecurityRequirements()
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "L'utilisateur a bien été crée et token envoyé",
+            @ApiResponse(responseCode = "201", description = "L'utilisateur a bien été crée et token envoyé",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = AuthResponse.class)) }),
             @ApiResponse(responseCode = "400", description = "Body invalide",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = MethodArgumentNotValidException.class)) }),
+                            schema = @Schema(implementation = ErrorsResponse.class)) }),
             @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
@@ -71,7 +70,7 @@ public class AuthController {
                             schema = @Schema(implementation = AuthResponse.class)) }),
             @ApiResponse(responseCode = "400", description = "Body invalide",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = MethodArgumentNotValidException.class)) }),
+                            schema = @Schema(implementation = ErrorsResponse.class)) }),
             @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
@@ -89,12 +88,6 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "L'utilisateur a bien été envoyé",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponse.class)) }),
-            @ApiResponse(responseCode = "400", description = "Id invalide",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = MethodArgumentNotValidException.class)) }),
-            @ApiResponse(responseCode = "404", description = "Utilisateur introuvable",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class)) }),
             @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
