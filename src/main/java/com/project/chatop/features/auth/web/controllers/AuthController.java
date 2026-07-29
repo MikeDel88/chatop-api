@@ -1,5 +1,6 @@
 package com.project.chatop.features.auth.web.controllers;
 
+import com.project.chatop.common.web.dtos.ErrorResponse;
 import com.project.chatop.common.web.dtos.ErrorsResponse;
 import com.project.chatop.features.auth.application.services.AuthService;
 import com.project.chatop.features.auth.web.dtos.LoginRequest;
@@ -48,8 +49,9 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Body invalide",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorsResponse.class)) }),
-            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
-                    content = @Content),
+            @ApiResponse(responseCode = "401", description = "Problème lors de l'enregistrement",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)) }),
             @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
                     content = @Content),
         }
@@ -71,8 +73,9 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Body invalide",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorsResponse.class)) }),
-            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
-                    content = @Content),
+            @ApiResponse(responseCode = "401", description = "Problème lors de la connexion",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)) }),
             @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
                     content = @Content),
         }
