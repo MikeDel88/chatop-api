@@ -18,7 +18,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.PROTECTED)
     Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     String email;
     @Column(nullable = false)
     String name;
