@@ -9,6 +9,6 @@ public record RentalRequest(
         @NotBlank String name,
         @NotNull @Positive Integer surface,
         @NotNull @Positive Integer price,
-        @NotNull MultipartFile picture,
+        MultipartFile picture,
         @NotBlank String description
 ) {}
