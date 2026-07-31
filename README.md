@@ -31,15 +31,15 @@ API REST développée avec Spring Boot pour l'application ChaTop, un portail de 
 
 La configuration de l'application (`src/main/resources/application.properties`) repose entièrement sur des **variables d'environnement** : aucune valeur par défaut n'est définie dans le projet.
 
-| Variable       | Description                                          |
-|----------------|-------------------------------------------------------|
-| `DB_URL`       | URL JDBC de connexion à la base MySQL                 |
-| `DB_USER`      | Utilisateur de la base de données                      |
-| `DB_PASSWORD`  | Mot de passe de la base de données                     |
-| `DB_DRIVER`    | Classe du driver JDBC MySQL                            |
-| `JWT_SECRET`   | Clé secrète utilisée pour signer les tokens JWT        |
-| `SERVER_PORT`  | Port d'écoute du serveur Spring Boot                   |
-| `BASE_URL`     | URL de base de l'API (utilisée pour générer des liens) |
+| Variable       | Description                                                |
+|----------------|------------------------------------------------------------|
+| `DB_URL`       | URL JDBC de connexion à la base MySQL                      |
+| `DB_USER`      | Utilisateur de la base de données                          |
+| `DB_PASSWORD`  | Mot de passe de la base de données                         |
+| `DB_DRIVER`    | Classe du driver JDBC MySQL                                |
+| `JWT_SECRET`   | Clé secrète utilisée pour signer les tokens JWT            |
+| `SERVER_PORT`  | Port d'écoute du serveur Spring Boot (3001 pour le projet) |
+| `BASE_URL`     | URL de base de l'API (utilisée pour générer des liens)     |
 
 Exemple de valeurs pour un environnement local :
 
