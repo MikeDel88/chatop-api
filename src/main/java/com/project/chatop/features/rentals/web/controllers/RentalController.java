@@ -84,7 +84,7 @@ public class RentalController {
         }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<RentalResponse> getById(@Valid @Positive @NotNull @PathVariable Long id) {
+    public ResponseEntity<RentalResponse> getById(@Positive @NotNull @PathVariable Long id) {
         Rental rental = this.rentalService.getById(id);
         return ResponseEntity.ok(rentalMapper.toRentalResponse(rental));
     }
@@ -135,7 +135,7 @@ public class RentalController {
     @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ConfirmResponse> update(
         @Valid @ModelAttribute RentalRequest rentalRequest,
-        @Valid @Positive @NotNull @PathVariable Long id
+        @Positive @NotNull @PathVariable Long id
     ) {
         if(rentalService.update(rentalRequest, id) != null) {
             ConfirmResponse confirmResponse = new ConfirmResponse("Rental updated !");

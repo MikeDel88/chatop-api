@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +50,7 @@ public class UserController {
         }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUser(@Valid @Positive @NotNull @PathVariable String id) {
+    public ResponseEntity<UserResponse> getUser(@Positive @NotNull @PathVariable String id) {
         User user = this.userService.getUser(Long.valueOf(id));
         return ResponseEntity.ok(userMapper.toUserResponse(user));
     }

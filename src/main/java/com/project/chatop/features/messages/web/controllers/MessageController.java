@@ -15,14 +15,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Validated
 @Tag(name = "Messages", description = "Gestion de l'envoi des messages vers le propriétaire de la location.")
 @RequestMapping("/api/messages")
 public class MessageController {
@@ -50,11 +48,10 @@ public class MessageController {
     )
     @PostMapping
     public ResponseEntity<ConfirmResponse> sendMessage(@Valid @RequestBody MessageRequest messageRequest) {
-        if(messageService.create(messageRequest) != null) {
-            ConfirmResponse confirmResponse = new ConfirmResponse("Message send with success");
-            return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
-        } else {
+        if(messageService.create(messageRequest) == null) {
             throw new MessageNotCreatedException();
         }
+        ConfirmResponse confirmResponse = new ConfirmResponse("Message send with success");
+        return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
     }
 }

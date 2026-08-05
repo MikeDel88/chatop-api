@@ -4,7 +4,6 @@ import com.project.chatop.features.rentals.domain.entities.Rental;
 import com.project.chatop.features.rentals.web.dtos.RentalRequest;
 import com.project.chatop.features.rentals.web.dtos.RentalResponse;
 import com.project.chatop.features.users.domain.entities.User;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -34,17 +33,15 @@ public class RentalMapper {
         if (rentalRequest == null || rental == null) {
             return null;
         }
-        return new Rental(
-                rental.getId(),
-                rentalRequest.name(),
-                rentalRequest.surface(),
-                rentalRequest.price(),
-                rental.getPicture(),
-                rentalRequest.description(),
-                rental.getOwner(),
-                rental.getCreatedAt(),
-                LocalDateTime.now()
-        );
+
+        rental.setPrice(rentalRequest.price()); // UPDATE
+        rental.setSurface(rentalRequest.surface()); // UPDATE
+        rental.setName(rentalRequest.name()); // UPDATE
+        rental.setDescription(rentalRequest.description());
+        rental.setUpdatedAt(LocalDateTime.now());
+
+        return rental;
+        // COMMIT;
     }
 
     public RentalResponse toRentalResponse(Rental rental) {
