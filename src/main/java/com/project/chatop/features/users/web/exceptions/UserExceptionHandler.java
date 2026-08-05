@@ -1,11 +1,14 @@
 package com.project.chatop.features.users.web.exceptions;
 
 import com.project.chatop.features.users.web.controllers.UserController;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(assignableTypes = UserController.class)
 public class UserExceptionHandler {
 
