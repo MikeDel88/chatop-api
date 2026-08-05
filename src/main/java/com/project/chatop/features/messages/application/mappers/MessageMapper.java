@@ -6,8 +6,6 @@ import com.project.chatop.features.rentals.domain.entities.Rental;
 import com.project.chatop.features.users.domain.entities.User;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 public class MessageMapper {
 
@@ -15,13 +13,10 @@ public class MessageMapper {
         if(messageRequest == null) {
             return null;
         }
-        return new Message(
-                null,
-                user,
-                rental,
-                messageRequest.message(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+        Message message = new Message();
+        message.setUser(user);
+        message.setRental(rental);
+        message.setMessage(messageRequest.message());
+        return message;
     }
 }

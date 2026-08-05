@@ -4,10 +4,7 @@ import com.project.chatop.features.rentals.domain.entities.Rental;
 import com.project.chatop.features.rentals.web.dtos.RentalRequest;
 import com.project.chatop.features.rentals.web.dtos.RentalResponse;
 import com.project.chatop.features.users.domain.entities.User;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
@@ -17,34 +14,28 @@ public class RentalMapper {
         if (rentalRequest == null) {
             return null;
         }
-        return new Rental(
-                null,
-                rentalRequest.name(),
-                rentalRequest.surface(),
-                rentalRequest.price(),
-                pictureUrl,
-                rentalRequest.description(),
-                owner,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+        Rental rental = new Rental();
+        rental.setOwner(owner);
+        rental.setPrice(rentalRequest.price());
+        rental.setSurface(rentalRequest.surface());
+        rental.setPicture(pictureUrl);
+        rental.setName(rentalRequest.name());
+        rental.setDescription(rentalRequest.description());
+
+        return rental;
     }
 
     public Rental toUpdateRental(Rental rental, RentalRequest rentalRequest) {
         if (rentalRequest == null || rental == null) {
             return null;
         }
-        return new Rental(
-                rental.getId(),
-                rentalRequest.name(),
-                rentalRequest.surface(),
-                rentalRequest.price(),
-                rental.getPicture(),
-                rentalRequest.description(),
-                rental.getOwner(),
-                rental.getCreatedAt(),
-                LocalDateTime.now()
-        );
+
+        rental.setPrice(rentalRequest.price());
+        rental.setSurface(rentalRequest.surface());
+        rental.setName(rentalRequest.name());
+        rental.setDescription(rentalRequest.description());
+
+        return rental;
     }
 
     public RentalResponse toRentalResponse(Rental rental) {

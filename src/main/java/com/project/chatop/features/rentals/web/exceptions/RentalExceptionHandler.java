@@ -1,33 +1,32 @@
 package com.project.chatop.features.rentals.web.exceptions;
 
 
-import com.project.chatop.common.web.dtos.ErrorResponse;
 import com.project.chatop.features.rentals.web.controllers.RentalController;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(assignableTypes = RentalController.class)
 public class RentalExceptionHandler {
 
     @ExceptionHandler(RentalNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorResponse> handlerRentalNotFound(RentalNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(exception.getMessage()));
+    public ProblemDetail handlerRentalNotFound(RentalNotFoundException exception) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
     @ExceptionHandler(RentalNotCreatedException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<ErrorResponse> handlerRentalNotCreated(RentalNotCreatedException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(exception.getMessage()));
+    public ProblemDetail handlerRentalNotCreated(RentalNotCreatedException exception) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
     }
 
     @ExceptionHandler(RentalNotUpdatedException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<ErrorResponse> handlerRentalNotUpdated(RentalNotUpdatedException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(exception.getMessage()));
+    public ProblemDetail handlerRentalNotUpdated(RentalNotUpdatedException exception) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
     }
 
 }

@@ -2,16 +2,17 @@ package com.project.chatop.features.users.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
     @Id
@@ -24,9 +25,11 @@ public class User {
     String name;
     @Column(nullable = false)
     String password;
-    @Column(name = "created_at")
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     LocalDateTime createdAt;
-    @Column(name = "updated_at")
+    @UpdateTimestamp
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     LocalDateTime updatedAt;
 
 }

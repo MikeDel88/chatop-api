@@ -5,6 +5,8 @@ import com.project.chatop.features.rentals.domain.entities.Rental;
 import com.project.chatop.features.users.domain.entities.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +15,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Message {
 
     @Id
@@ -28,9 +29,11 @@ public class Message {
     Rental rental;
     @Column(nullable = false)
     String message;
-    @Column(name = "created_at")
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     LocalDateTime createdAt;
-    @Column(name = "updated_at")
+    @UpdateTimestamp
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     LocalDateTime updatedAt;
 
 }
