@@ -7,7 +7,6 @@ import com.project.chatop.features.auth.web.dtos.RegisterRequest;
 import com.project.chatop.features.users.web.dtos.UserResponse;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component

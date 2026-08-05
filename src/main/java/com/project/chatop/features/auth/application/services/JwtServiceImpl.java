@@ -16,8 +16,6 @@ public class JwtServiceImpl implements JwtService {
 
      private final SecretKey secretKey;
 
-    private final Long EXPIRATION_TIME = 30L * 24 * 60 * 60 * 1000L;
-
     private final String keyType = "type";
 
     private enum JWT_TYPE {
@@ -30,7 +28,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     public String generateAccessToken(String userId) {
-        return generateToken(userId, JWT_TYPE.ACCESS, EXPIRATION_TIME);
+        Long expirationTime = 30L * 24 * 60 * 60 * 1000L;
+        return generateToken(userId, expirationTime);
     }
 
     public Boolean validateAccessToken(String token) {
@@ -53,12 +52,12 @@ public class JwtServiceImpl implements JwtService {
         return claims.getSubject();
     }
 
-    private String generateToken(String subject, JWT_TYPE type, Long expiry) {
+    private String generateToken(String subject, Long expiry) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiry);
         return Jwts.builder()
                 .subject(subject)
-                .claim(this.keyType, type)
+                .claim(this.keyType, JWT_TYPE.ACCESS)
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(secretKey, Jwts.SIG.HS256)

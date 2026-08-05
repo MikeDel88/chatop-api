@@ -6,8 +6,6 @@ import com.project.chatop.features.rentals.domain.entities.Rental;
 import com.project.chatop.features.users.domain.entities.User;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 public class MessageMapper {
 
