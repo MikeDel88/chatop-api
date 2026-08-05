@@ -17,18 +17,15 @@ public class MessageServiceImpl implements MessageService {
 
     private final RentalService rentalService;
     private final UserService userService;
-    private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
 
     public MessageServiceImpl(
             RentalService rentalService,
             UserService userService,
-            MessageRepository messageRepository,
             MessageMapper messageMapper
     ) {
         this.rentalService = rentalService;
         this.userService = userService;
-        this.messageRepository = messageRepository;
         this.messageMapper = messageMapper;
     }
 
@@ -36,7 +33,6 @@ public class MessageServiceImpl implements MessageService {
     public Message create(MessageRequest messageRequest) {
         Rental rental = rentalService.getById(messageRequest.rental_id());
         User user = userService.getUser(messageRequest.user_id());
-        Message message = messageMapper.toCreateMessage(messageRequest, user, rental);
-        return messageRepository.save(message);
+        return messageMapper.toCreateMessage(messageRequest, user, rental);
     }
 }

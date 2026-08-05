@@ -17,15 +17,11 @@ public class UserMapper {
         if(registerRequest == null) {
             return null;
         }
-
-        return new User(
-                null,
-                registerRequest.email(),
-                registerRequest.name(),
-                hashEncoder.encode(registerRequest.password()),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+        User user = new User();
+        user.setEmail(registerRequest.email());
+        user.setName(registerRequest.name());
+        user.setPassword(hashEncoder.encode(registerRequest.password()));
+        return user;
     }
 
     public UserResponse toUserResponse(User user) {

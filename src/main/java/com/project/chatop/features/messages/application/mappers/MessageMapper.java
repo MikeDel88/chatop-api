@@ -15,13 +15,10 @@ public class MessageMapper {
         if(messageRequest == null) {
             return null;
         }
-        return new Message(
-                null,
-                user,
-                rental,
-                messageRequest.message(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+        Message message = new Message();
+        message.setUser(user);
+        message.setRental(rental);
+        message.setMessage(messageRequest.message());
+        return message;
     }
 }

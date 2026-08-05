@@ -33,8 +33,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(rollbackOn = BadAuthenticationException.class)
     public AuthResponse setRegister(RegisterRequest registerRequest) {
-        User user = this.userMapper.toUser(registerRequest, hashEncoder);
-        User userSaved = this.userRepository.save(user);
+        User userSaved = this.userMapper.toUser(registerRequest, hashEncoder);
         return createResponse(userSaved);
     }
 
