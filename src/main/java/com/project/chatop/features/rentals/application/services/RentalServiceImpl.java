@@ -49,7 +49,8 @@ public class RentalServiceImpl implements RentalService {
     public Rental create(RentalRequest rentalRequest, Long userId) {
         User owner =  this.userService.getUser(userId);
         String url = pictureService.saveImage(rentalRequest.picture());
-        return rentalMapper.toCreateRental(rentalRequest, url, owner);
+        Rental rentalSaved = rentalMapper.toCreateRental(rentalRequest, url, owner);
+        return this.rentalRepository.save(rentalSaved);
     }
 
     @Transactional(rollbackOn = RentalNotUpdatedException.class)
