@@ -1,6 +1,6 @@
 package com.project.chatop.config;
 
-import com.project.chatop.features.auth.application.utils.JwtAuthFilter;
+import com.project.chatop.application.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
