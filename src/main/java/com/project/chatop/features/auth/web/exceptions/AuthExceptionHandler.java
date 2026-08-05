@@ -10,7 +10,9 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-
+/**
+ * Soit par Order, soit par packages (basePackages = "com.exemple.app.directory")
+ */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(assignableTypes = {AuthController.class, JwtService.class})
 public class AuthExceptionHandler {
