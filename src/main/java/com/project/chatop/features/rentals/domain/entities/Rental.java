@@ -3,6 +3,8 @@ package com.project.chatop.features.rentals.domain.entities;
 import com.project.chatop.features.users.domain.entities.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -30,10 +32,10 @@ public class Rental {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false, updatable = false)
     User owner;
-    @Setter(AccessLevel.NONE)
+    @CreationTimestamp
     @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     LocalDateTime createdAt;
-    @Setter(AccessLevel.NONE)
+    @UpdateTimestamp
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     LocalDateTime updatedAt;
 
