@@ -1,4 +1,4 @@
-package com.project.chatop.application;
+package com.project.chatop.security;
 
 import com.project.chatop.port.service.JwtService;
 import jakarta.servlet.FilterChain;

@@ -1,7 +1,7 @@
 package com.project.chatop.mapper;
 
 
-import com.project.chatop.application.HashEncoder;
+import com.project.chatop.security.HashEncoder;
 import com.project.chatop.entity.User;
 import com.project.chatop.dto.request.RegisterRequest;
 import com.project.chatop.dto.response.UserResponse;

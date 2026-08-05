@@ -1,4 +1,4 @@
-package com.project.chatop.application;
+package com.project.chatop.security;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
