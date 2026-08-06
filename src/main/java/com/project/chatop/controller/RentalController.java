@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Log4j2
 @Tag(name = "Rentals", description = "Gestion des locations")
 @Validated
 @RequestMapping("/api/rentals")
@@ -56,6 +58,7 @@ public class RentalController {
     )
     @GetMapping
     public ResponseEntity<RentalsResponse> getAll() {
+        log.info("call /getAll rentals");
         List<Rental> rentals = this.rentalService.getAll();
         List<RentalResponse> rentalsReponse = rentals
                 .stream()
@@ -85,6 +88,7 @@ public class RentalController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<RentalResponse> getById(@Positive @NotNull @PathVariable Long id) {
+        log.info("call /getById id {}", id);
         Rental rental = this.rentalService.getById(id);
         return ResponseEntity.ok(rentalMapper.toRentalResponse(rental));
     }
@@ -109,6 +113,7 @@ public class RentalController {
         @AuthenticationPrincipal Long userId,
         @Valid @ModelAttribute RentalRequest rentalRequest
     ) {
+        log.info("call /create");
         if(rentalService.create(rentalRequest, userId) != null) {
             ConfirmResponse confirmResponse = new ConfirmResponse("Rental created !");
             return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
@@ -137,6 +142,7 @@ public class RentalController {
         @Valid @ModelAttribute RentalRequest rentalRequest,
         @Positive @NotNull @PathVariable Long id
     ) {
+        log.info("call /update id {}", id);
         if(rentalService.update(rentalRequest, id) != null) {
             ConfirmResponse confirmResponse = new ConfirmResponse("Rental updated !");
             return ResponseEntity.status(HttpStatus.OK).body(confirmResponse);

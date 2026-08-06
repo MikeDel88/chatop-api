@@ -13,6 +13,7 @@ import com.project.chatop.exception.RentalNotUpdatedException;
 import com.project.chatop.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.List;
 /**
  * RentalService qui permet la gestion des Rentals.
  */
+@Log4j2
 @Service
 public class RentalServiceImpl implements RentalService {
 
@@ -46,6 +48,7 @@ public class RentalServiceImpl implements RentalService {
      * @return List<Rental> la liste des rentals.
      */
     public List<Rental> getAll() {
+        log.info("RentalService : getAll");
         return this.rentalRepository.findAll();
     }
 
@@ -55,6 +58,7 @@ public class RentalServiceImpl implements RentalService {
      * @return Rental
      */
     public Rental getById(Long id) {
+        log.info("RentalService : getById {}", id);
         return this.rentalRepository.findRentalById(id).orElseThrow(RentalNotFoundException::new);
     }
 
@@ -72,6 +76,7 @@ public class RentalServiceImpl implements RentalService {
     @SneakyThrows(IOException.class)
     @Transactional(rollbackOn = {RentalNotCreatedException.class, IOException.class})
     public Rental create(RentalRequest rentalRequest, Long userId) {
+        log.info("RentalService : create {} | id : {}", rentalRequest, userId);
         User owner =  this.userService.getUser(userId);
         String url = pictureService.saveImage(rentalRequest.picture());
         Rental rentalSaved = rentalMapper.toCreateRental(rentalRequest, url, owner);
@@ -89,6 +94,7 @@ public class RentalServiceImpl implements RentalService {
      */
     @Transactional(rollbackOn = RentalNotUpdatedException.class)
     public Rental update(RentalRequest rentalRequest, Long rentalId) {
+        log.info("RentalService : update {} | id : {}", rentalRequest, rentalId);
         Rental rental = this.getById(rentalId);
         return this.rentalMapper.toUpdateRental(rental, rentalRequest);
     }

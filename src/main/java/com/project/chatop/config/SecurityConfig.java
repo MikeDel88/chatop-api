@@ -2,6 +2,7 @@ package com.project.chatop.config;
 
 import com.project.chatop.security.ImageFilter;
 import com.project.chatop.security.JwtAuthFilter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
+@Log4j2
 @Configuration
 public class SecurityConfig {
 
@@ -38,6 +40,7 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
+        log.info("Security Filter Chain");
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)

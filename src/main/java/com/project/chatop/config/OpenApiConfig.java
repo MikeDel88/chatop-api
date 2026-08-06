@@ -6,11 +6,13 @@ import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 
+@Log4j2
 @Configuration
 public class OpenApiConfig {
 
@@ -23,6 +25,7 @@ public class OpenApiConfig {
      */
     @Bean
     public OpenAPI customOpenAPI() {
+        log.info("OpenAPI Documentation");
         return new OpenAPI()
                 .info(
                         new Info()

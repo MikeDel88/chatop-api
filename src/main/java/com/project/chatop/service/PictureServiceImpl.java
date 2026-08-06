@@ -1,6 +1,7 @@
 package com.project.chatop.service;
 
 import com.project.chatop.port.service.PictureService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ import java.util.UUID;
 /**
  * PictureService qui permet le traitement de l'image et sa sauvegarde sur le serveur.
  */
+@Log4j2
 @Service
 public class PictureServiceImpl implements PictureService {
 
@@ -32,6 +34,9 @@ public class PictureServiceImpl implements PictureService {
      * @throws IOException en cas d'erreur sur l'image ou la sauvegarde.
      */
     public String saveImage(MultipartFile file) throws IOException {
+
+        log.debug("Picture Service : Upload image file {}", file.getOriginalFilename());
+        log.debug("Picture Service : Upload image file type {}", file.getContentType());
 
         if(file.isEmpty()) {
             throw new IOException("Failed to upload file");
@@ -61,7 +66,9 @@ public class PictureServiceImpl implements PictureService {
         Path filePath = uploadPath.resolve(fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        return getUrl(fileName);
+        String url = getUrl(fileName);
+        log.debug("Picture Service : Image uploaded successfully with URL {}", url);
+        return url;
     }
 
     private String getUrl(String fileName) {

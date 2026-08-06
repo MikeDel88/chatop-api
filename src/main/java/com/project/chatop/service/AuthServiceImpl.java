@@ -11,11 +11,13 @@ import com.project.chatop.mapper.UserMapper;
 import com.project.chatop.entity.User;
 import com.project.chatop.port.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 /**
  * Service qui gère l'authentification et l'accès au profil de l'utilisateur connecté.
  */
+@Log4j2
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -46,6 +48,8 @@ public class AuthServiceImpl implements AuthService {
      */
     @Transactional(rollbackOn = BadAuthenticationException.class)
     public AuthResponse setRegister(RegisterRequest registerRequest) {
+        log.info("AuthService : Enregistrement de l'utilisateur");
+        log.debug("register datas {}", registerRequest);
         User user = this.userMapper.toUser(registerRequest, hashEncoder);
         User userSaved = this.userRepository.save(user);
         return createResponse(userSaved);
@@ -60,6 +64,8 @@ public class AuthServiceImpl implements AuthService {
      * @return AuthResponse
      */
     public AuthResponse setLogin(LoginRequest loginRequest) {
+        log.info("AuthService : Connexion de l'utilisateur");
+        log.debug("login datas {}", loginRequest);
 
         User user = this.userRepository.findUserByEmail(loginRequest.email()).orElse(null);
 
@@ -70,11 +76,20 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private AuthResponse createResponse(User user) {
+        log.info("AuthService : Creation du token");
+
         String token = jwtService.generateAccessToken(String.valueOf(user.getId()));
+
+        log.debug("AuthService : Token de l'utilisateur {}", token);
+
         return new AuthResponse(token);
     }
 
     private void isAuthenticated(LoginRequest request, User user) throws BadAuthenticationException {
+        log.info("AuthService : Vérification de l'authentification");
+        log.debug("isAuthenticated user {}", user);
+        log.debug("isAuthenticated password {}", request.password());
+
         String fakeHash = "2a107s46EoKwqgSCgL58gT47VOEeeaTfkeWI9eVIdSxM91Ku9lCRmsWmG";
         String hashPassword = user == null ? fakeHash : user.getPassword();
 

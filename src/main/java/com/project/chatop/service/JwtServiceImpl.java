@@ -5,6 +5,7 @@ import com.project.chatop.exception.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.Date;
  * JwtService permet la génération du token.
  * Sa validité et récupérer le subject du token.
  */
+@Log4j2
 @Service
 public class JwtServiceImpl implements JwtService {
 
@@ -38,8 +40,11 @@ public class JwtServiceImpl implements JwtService {
      * @return String le token généré.
      */
     public String generateAccessToken(String userId) {
+        log.info("JWT Service : generateAccessToken");
         Long expirationTime = 30L * 24 * 60 * 60 * 1000L;
-        return generateToken(userId, expirationTime);
+        String token = generateToken(userId, expirationTime);
+        log.debug("JWT Service : Token de l'utilisateur {}", token);
+        return token;
     }
 
     /**
@@ -49,7 +54,11 @@ public class JwtServiceImpl implements JwtService {
      * @return Boolean si le token est valide.
      */
     public Boolean validateAccessToken(String token) {
+        log.info("JWT Service : validateAccessToken");
+
         Claims claims = this.parseAllClaims(token);
+        log.debug("JWT Service : Claims de l'utilisateur {}", claims);
+
         if(claims == null)
             return false;
 
@@ -66,6 +75,7 @@ public class JwtServiceImpl implements JwtService {
      * @return String l'identifiant Id subject.
      */
     public String getUserIdFromToken(String token) {
+        log.info("JWT Service : getUserIdFromToken");
         Claims claims = this.parseAllClaims(token);
 
         if(claims == null)

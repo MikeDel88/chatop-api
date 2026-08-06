@@ -18,12 +18,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Log4j2
 @RequestMapping("/api/auth")
 @Tag(name = "Auth", description = "Authentification de l'utilisateur et récupération du profil")
 public class AuthController {
@@ -56,6 +58,7 @@ public class AuthController {
     )
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
+        log.info("call /register");
         AuthResponse authResponse = authService.setRegister(registerRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -80,6 +83,7 @@ public class AuthController {
     )
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        log.info("call /login");
         AuthResponse authResponse = authService.setLogin(loginRequest);
         return ResponseEntity.ok(authResponse);
     }
@@ -97,6 +101,7 @@ public class AuthController {
     )
     @GetMapping("/me")
     public ResponseEntity<UserResponse> me(@AuthenticationPrincipal Long userId) {
+        log.info("call /me");
         User user = userService.getUser(userId);
         return ResponseEntity.ok(userMapper.toUserResponse(user));
     }

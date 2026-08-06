@@ -14,11 +14,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Log4j2
 @Validated
 @Tag(name = "Users", description = "Gestion des utilisateurs")
 @RequestMapping("/api/user")
@@ -51,6 +53,7 @@ public class UserController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUser(@Positive @NotNull @PathVariable String id) {
+        log.info("call /getUser id {}", id);
         User user = this.userService.getUser(Long.valueOf(id));
         return ResponseEntity.ok(userMapper.toUserResponse(user));
     }
