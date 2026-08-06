@@ -5,6 +5,6 @@ import com.project.chatop.dto.request.MessageRequest;
 
 
 public interface MessageService {
-    Message create(MessageRequest messageRequest);
+    Message create(MessageRequest messageRequest, Long userId);
 }
 

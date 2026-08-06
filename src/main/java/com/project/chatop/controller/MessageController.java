@@ -13,14 +13,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Log4j2
 @Tag(name = "Messages", description = "Gestion de l'envoi des messages vers le propriétaire de la location.")
 @RequestMapping("/api/messages")
 public class MessageController {
@@ -47,8 +50,12 @@ public class MessageController {
     }
     )
     @PostMapping
-    public ResponseEntity<ConfirmResponse> sendMessage(@Valid @RequestBody MessageRequest messageRequest) {
-        if(messageService.create(messageRequest) == null) {
+    public ResponseEntity<ConfirmResponse> sendMessage(
+            @AuthenticationPrincipal Long userId,
+            @Valid @RequestBody MessageRequest messageRequest
+    ) {
+        log.info("call /messages");
+        if(messageService.create(messageRequest, userId) == null) {
             throw new MessageNotCreatedException();
         }
         ConfirmResponse confirmResponse = new ConfirmResponse("Message send with success");

@@ -2,41 +2,52 @@ package com.project.chatop.service;
 
 import com.project.chatop.port.service.MessageService;
 import com.project.chatop.port.service.RentalService;
-import com.project.chatop.port.service.UserService;
 import com.project.chatop.mapper.MessageMapper;
 import com.project.chatop.entity.Message;
 import com.project.chatop.port.repository.MessageRepository;
 import com.project.chatop.dto.request.MessageRequest;
 import com.project.chatop.exception.MessageNotCreatedException;
 import com.project.chatop.entity.Rental;
-import com.project.chatop.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
+/**
+ * MessageService qui permet la création d'un message lié à un rental en base de données.
+ */
 @Service
 public class MessageServiceImpl implements MessageService {
 
     private final RentalService rentalService;
-    private final UserService userService;
     private final MessageMapper messageMapper;
     private final MessageRepository messageRepository;
 
     public MessageServiceImpl(
             RentalService rentalService,
-            UserService userService,
-            MessageMapper messageMapper, MessageRepository messageRepository
+            MessageMapper messageMapper,
+            MessageRepository messageRepository
     ) {
         this.rentalService = rentalService;
-        this.userService = userService;
         this.messageMapper = messageMapper;
         this.messageRepository = messageRepository;
     }
 
+    /**
+     * Création d'un message affilié à un rental et un user.
+     * On récupère si le rental existe.
+     * On récupère si le user de la session côté front existe.
+     * @param messageRequest DTO qui contient user_id et rental_id.
+     * @param userId l'id de l'utilisateur authentifié par l'application.
+     * @return Message
+     */
     @Transactional(rollbackOn = MessageNotCreatedException.class)
-    public Message create(MessageRequest messageRequest) {
+    public Message create(MessageRequest messageRequest, Long userId) {
         Rental rental = rentalService.getById(messageRequest.rental_id());
-        User user = userService.getUser(messageRequest.user_id());
-        Message message = messageMapper.toCreateMessage(messageRequest, user, rental);
+        if(!Objects.equals(userId, rental.getId())) {
+            throw new MessageNotCreatedException();
+        }
+        Message message = messageMapper.toCreateMessage(messageRequest, rental);
         return this.messageRepository.save(message);
     }
 }
