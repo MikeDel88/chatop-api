@@ -66,7 +66,7 @@ public class RentalServiceImpl implements RentalService {
      * On sauvegarde l'image au serveur dont on récupère l'url à stocker en base de données.
      * On mappe le RentalRequest pour créer un Rental à sauvegarder.
      * On sauvegarde le rental en base de données.
-     * Exceptions : IOException pour l'image, UserNotFoundException qui ferait un rollback de la transaction.
+     * Exceptions : IOException pour l'image.
      * @param rentalRequest DTO
      * @param userId id de l'utilisateur authentifié.
      * @return Rental créé et sauvegardé en base de données.

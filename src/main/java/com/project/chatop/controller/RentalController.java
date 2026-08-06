@@ -9,8 +9,6 @@ import com.project.chatop.entity.Rental;
 import com.project.chatop.dto.request.RentalRequest;
 import com.project.chatop.dto.response.RentalResponse;
 import com.project.chatop.dto.response.RentalsResponse;
-import com.project.chatop.exception.RentalNotCreatedException;
-import com.project.chatop.exception.RentalNotUpdatedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

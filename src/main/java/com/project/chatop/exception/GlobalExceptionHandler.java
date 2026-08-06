@@ -5,6 +5,7 @@ import jakarta.validation.ValidationException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,7 +33,7 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
-    @ExceptionHandler({ValidationException.class, DataAccessException.class})
+    @ExceptionHandler({ValidationException.class, DataAccessException.class, DataIntegrityViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail  handleDatabaseException(Exception exception) {
         log.error("handleDatabaseException : {}", exception.getMessage());
