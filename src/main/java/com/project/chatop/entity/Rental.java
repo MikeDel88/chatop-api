@@ -1,6 +1,7 @@
 package com.project.chatop.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -18,17 +19,23 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.PROTECTED)
     Long id;
+    @NotNull
     @Column(nullable = false)
     String name;
+    @NotNull
     @Column(nullable = false)
     Integer surface;
+    @NotNull
     @Column(nullable = false)
     Integer price;
+    @NotNull
     @Column(nullable = false)
     String picture;
+    @NotNull
     @Column(nullable = false)
     String description;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "owner_id", nullable = false, updatable = false)
     User owner;
     @CreationTimestamp

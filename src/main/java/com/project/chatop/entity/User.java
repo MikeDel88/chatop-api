@@ -1,6 +1,7 @@
 package com.project.chatop.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,9 +21,12 @@ public class User {
     @Setter(AccessLevel.PROTECTED)
     Long id;
     @Column(nullable = false, unique = true)
+    @NotNull
     String email;
+    @NotNull
     @Column(nullable = false)
     String name;
+    @NotNull
     @Column(nullable = false)
     String password;
     @CreationTimestamp

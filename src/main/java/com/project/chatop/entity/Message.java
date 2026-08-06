@@ -2,6 +2,7 @@ package com.project.chatop.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,12 +20,15 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.PROTECTED)
     Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     User user;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "rental_id", nullable = false, updatable = false)
     Rental rental;
+    @NotNull
     @Column(nullable = false)
     String message;
     @CreationTimestamp
