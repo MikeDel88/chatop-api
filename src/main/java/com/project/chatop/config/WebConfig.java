@@ -14,6 +14,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${app.upload.dir}")
     private String uploadDir;
 
+    /**
+     * Permet d'accéder aux images stockées sur le serveur.
+     * @param registry ResourceHandlerRegistry
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String path = Paths.get(uploadDir).toAbsolutePath().normalize().toString();

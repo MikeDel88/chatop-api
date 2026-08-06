@@ -11,6 +11,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Filtre les images qui arrive depuis un "src" en front.
+ * On regarde les Referer pour savoir si la requête est autorisée.
+ * Si le Referer n'est pas dans la liste des autorisés, on renvoie un code 403 Forbidden.
+ * Cela permet d'éviter que des sites externes utilisent nos images sans autorisation.
+ * Le filtre est appliqué à toutes les requêtes qui commencent par "/images/"
+ */
 @Component
 public class ImageFilter extends OncePerRequestFilter {
 

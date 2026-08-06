@@ -13,6 +13,9 @@ import com.project.chatop.port.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service qui gère l'authentification et l'accès au profil de l'utilisateur connecté.
+ */
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -33,6 +36,14 @@ public class AuthServiceImpl implements AuthService {
         this.jwtService = jwtService;
     }
 
+    /**
+     * Enregistrement de l'utilisateur.
+     * On mappe les données de RegisterRequest vers User en encodant le mot de passe.
+     * On enregistre l'utilisateur en base de données.
+     * Si l'authentification est bonne, on crée un token et on le renvoie dans AuthResponse.
+     * @param registerRequest DTO d'entrée pour l'enregistrement.
+     * @return AuthResponse
+     */
     @Transactional(rollbackOn = BadAuthenticationException.class)
     public AuthResponse setRegister(RegisterRequest registerRequest) {
         User user = this.userMapper.toUser(registerRequest, hashEncoder);
@@ -40,6 +51,14 @@ public class AuthServiceImpl implements AuthService {
         return createResponse(userSaved);
     }
 
+    /**
+     * Login de l'utilisateur.
+     * On cherche si l'utilisateur existe en base de données.
+     * On regarde l'authentification via isAuthenticated (que l'user soit null ou pas, on applique la même logique pour éviter de savoir si l'utilisateur existe ou pas).
+     * Si l'authentification est bonne, on crée un token et on le renvoie dans AuthResponse.
+     * @param loginRequest DTO d'entrée pour la connexion.
+     * @return AuthResponse
+     */
     public AuthResponse setLogin(LoginRequest loginRequest) {
 
         User user = this.userRepository.findUserByEmail(loginRequest.email()).orElse(null);

@@ -14,6 +14,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import java.io.IOException;
 import java.util.Collections;
 
+/**
+ * Filtre du JwtAuth.
+ * On récupère le "Authorization" dans le header de la requête.
+ * On regarde si on a bien un "Bearer " dans le header.
+ * Si c'est le cas, on valide le token avec le JwtService.
+ * Si le token est valide, on récupère l'id de l'utilisateur et on le met dans le contexte de sécurité.
+ * Cela permet d'avoir l'utilisateur connecté dans le contexte de sécurité pour les autres filtres et les contrôleurs.
+ * Le filtre est appliqué à toutes les requêtes sauf celles qui sont autorisées dans le SecurityConfig ("/api/auth/register", "/api/auth/login", "/images/**").
+ */
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 

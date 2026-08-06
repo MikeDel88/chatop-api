@@ -14,6 +14,13 @@ import io.swagger.v3.oas.models.info.License;
 @Configuration
 public class OpenApiConfig {
 
+    /**
+     * Création de la configuration de la documentation OpenApi.
+     * Ajout du titre et de la description
+     * Ajout du github avec le code source du projet
+     * Ajout du schéma de sécurité Bearer Jwt
+     * @return OpenAPI configuration
+     */
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()

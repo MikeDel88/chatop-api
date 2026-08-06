@@ -24,18 +24,27 @@ public class SecurityConfig {
         this.imageFilter = imageFilter;
     }
 
+    /**
+     * Création du filter chain pour les requêtes Http
+     * Désactivation CSRF (Formulaires et FormLogin par défaut).
+     * Pour l'API en mode Stateless (pas d'était de sessions).
+     * CORS pour aller chercher la config dans WebConfig.
+     * Autorisation des routes.
+     * Gestion des exceptions pour renvoyer 401 au lieu de 403.
+     * Ajout d'un filtre pour vérifier le token et enregistrer l'authentification.
+     * Ajout d'un filter pour vérifier l'origin "Referer" qui cherche à charger l'image.
+     * @param httpSecurity HttpSecurity
+     * @return HttpSecurity configuré
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
         return httpSecurity
-                // Désactivation CSRF (Formulaires et FormLogin par défaut).
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                // Pour l'API en mode Stateless (pas d'était de sessions)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .cors(Customizer.withDefaults())
-                // Autorisations des routes.
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers(
@@ -48,14 +57,11 @@ public class SecurityConfig {
                                 .requestMatchers("/images/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                // Renvoi 401 au lieu de 403 en cas d'erreur principale.
                 .exceptionHandling ( configurer ->
                     configurer
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
-                // Ajout d'un filtre pour vérifier le token et enregistrer l'authentification.
                 .addFilterBefore(this.jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                // Ajout d'un filter pour vérifier l'origin "Referer" qui cherche à charger l'image.
                 .addFilterBefore(this.imageFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
