@@ -43,12 +43,12 @@ public class MessageServiceImpl implements MessageService {
      * @param userId l'id de l'utilisateur authentifié par l'application.
      * @return Message
      */
-    @Transactional(rollbackOn = MessageNotCreatedException.class)
+    @Transactional
     public Message create(MessageRequest messageRequest, Long userId) {
         log.info("MessageService : create");
 
         Rental rental = rentalService.getById(messageRequest.rental_id());
-        if(!Objects.equals(userId, rental.getId())) {
+        if(!Objects.equals(userId, messageRequest.user_id())) {
             throw new MessageNotCreatedException();
         }
         Message message = messageMapper.toCreateMessage(messageRequest, rental);

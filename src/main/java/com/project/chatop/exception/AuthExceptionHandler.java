@@ -6,6 +6,7 @@ import com.project.chatop.controller.AuthController;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +24,12 @@ public class AuthExceptionHandler {
     public ProblemDetail handleBadAuthentication(BadAuthenticationException exception) {
         log.error("handleBadAuthentication : {}", exception.getMessage());
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ProblemDetail handleDataIntegrityViolation(DataIntegrityViolationException exception) {
+        log.error("handleDataIntegrityViolation : {}", exception.getMessage());
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, "Un problème est survenue lors de l'enregistrement");
     }
 
     @ExceptionHandler(InvalidTokenException.class)

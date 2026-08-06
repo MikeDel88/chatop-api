@@ -7,9 +7,7 @@ import com.project.chatop.mapper.RentalMapper;
 import com.project.chatop.entity.Rental;
 import com.project.chatop.port.repository.RentalRepository;
 import com.project.chatop.dto.request.RentalRequest;
-import com.project.chatop.exception.RentalNotCreatedException;
 import com.project.chatop.exception.RentalNotFoundException;
-import com.project.chatop.exception.RentalNotUpdatedException;
 import com.project.chatop.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
@@ -74,7 +72,7 @@ public class RentalServiceImpl implements RentalService {
      * @return Rental créé et sauvegardé en base de données.
      */
     @SneakyThrows(IOException.class)
-    @Transactional(rollbackOn = {RentalNotCreatedException.class, IOException.class})
+    @Transactional(rollbackOn = {IOException.class})
     public Rental create(RentalRequest rentalRequest, Long userId) {
         log.info("RentalService : create {} | id : {}", rentalRequest, userId);
         User owner =  this.userService.getUser(userId);
@@ -92,7 +90,7 @@ public class RentalServiceImpl implements RentalService {
      * @param rentalId l'identifiant du rental à mettre à jour.
      * @return Rental mis à jour.
      */
-    @Transactional(rollbackOn = RentalNotUpdatedException.class)
+    @Transactional
     public Rental update(RentalRequest rentalRequest, Long rentalId) {
         log.info("RentalService : update {} | id : {}", rentalRequest, rentalId);
         Rental rental = this.getById(rentalId);

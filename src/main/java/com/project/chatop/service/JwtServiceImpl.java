@@ -79,7 +79,7 @@ public class JwtServiceImpl implements JwtService {
         Claims claims = this.parseAllClaims(token);
 
         if(claims == null)
-            throw new InvalidTokenException("l'authentification est invalide.");
+            throw new InvalidTokenException();
 
         return claims.getSubject();
     }
