@@ -55,9 +55,7 @@ public class MessageController {
             @Valid @RequestBody MessageRequest messageRequest
     ) {
         log.info("call /messages");
-        if(messageService.create(messageRequest, userId) == null) {
-            throw new MessageNotCreatedException();
-        }
+        messageService.create(messageRequest, userId);
         ConfirmResponse confirmResponse = new ConfirmResponse("Message send with success");
         return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
     }

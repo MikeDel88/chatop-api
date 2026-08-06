@@ -114,12 +114,9 @@ public class RentalController {
         @Valid @ModelAttribute RentalRequest rentalRequest
     ) {
         log.info("call /create");
-        if(rentalService.create(rentalRequest, userId) != null) {
-            ConfirmResponse confirmResponse = new ConfirmResponse("Rental created !");
-            return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
-        } else {
-            throw new RentalNotCreatedException();
-        }
+        rentalService.create(rentalRequest, userId);
+        ConfirmResponse confirmResponse = new ConfirmResponse("Rental created !");
+        return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
     }
 
     @Operation(summary = "Mise à jour d'une location par son identifiant.")
@@ -143,12 +140,9 @@ public class RentalController {
         @Positive @NotNull @PathVariable Long id
     ) {
         log.info("call /update id {}", id);
-        if(rentalService.update(rentalRequest, id) != null) {
-            ConfirmResponse confirmResponse = new ConfirmResponse("Rental updated !");
-            return ResponseEntity.status(HttpStatus.OK).body(confirmResponse);
-        } else {
-            throw new RentalNotUpdatedException();
-        }
+        rentalService.update(rentalRequest, id);
+        ConfirmResponse confirmResponse = new ConfirmResponse("Rental updated !");
+        return ResponseEntity.status(HttpStatus.OK).body(confirmResponse);
     }
 
 
