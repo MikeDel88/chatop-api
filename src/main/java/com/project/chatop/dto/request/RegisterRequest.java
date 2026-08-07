@@ -4,6 +4,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * Requete lors de l'enregistrement de l'utilisateur "/auth/register"
+ * Tout est required
+ * @param name nom de l'utilisateur
+ * @param email
+ * @param password
+ */
 public record RegisterRequest(
     @NotBlank
     @Size(min = 3, message = "le nom doit contenir au minimum 3 caractères.")
