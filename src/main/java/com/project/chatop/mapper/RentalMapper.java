@@ -16,9 +16,7 @@ public class RentalMapper {
         log.info("toCreateRental : {}", rentalRequest);
         log.debug("toCreateRental : {}", pictureUrl);
         log.debug("toCreateRental : {}", owner);
-        if (rentalRequest == null) {
-            return null;
-        }
+
         Rental rental = new Rental();
         rental.setOwner(owner);
         rental.setPrice(rentalRequest.price());
@@ -27,6 +25,7 @@ public class RentalMapper {
         rental.setName(rentalRequest.name());
         rental.setDescription(rentalRequest.description());
         log.debug("toCreateRental : {}", rental);
+
         return rental;
     }
 
@@ -34,10 +33,6 @@ public class RentalMapper {
     public Rental toUpdateRental(Rental rental, RentalRequest rentalRequest) {
         log.info("toUpdateRental : {}", rentalRequest);
         log.debug("toUpdateRental : {}", rental);
-
-        if (rentalRequest == null || rental == null) {
-            return null;
-        }
 
         rental.setPrice(rentalRequest.price());
         rental.setSurface(rentalRequest.surface());
@@ -50,9 +45,6 @@ public class RentalMapper {
 
     public RentalResponse toRentalResponse(Rental rental) {
         log.info("toRentalResponse : {}", rental);
-        if(rental == null) {
-            return null;
-        }
 
         String europeanDatePattern = "yyyy/MM/dd";
         DateTimeFormatter europeanDateFormatter = DateTimeFormatter.ofPattern(europeanDatePattern);
