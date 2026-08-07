@@ -60,9 +60,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         log.info("call /register");
         AuthResponse authResponse = authService.setRegister(registerRequest);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(authResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(authResponse);
     }
 
     @Operation(summary = "Se connecter à un compte utilisateur")
@@ -82,10 +80,9 @@ public class AuthController {
         }
     )
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         log.info("call /login");
-        AuthResponse authResponse = authService.setLogin(loginRequest);
-        return ResponseEntity.ok(authResponse);
+        return authService.setLogin(loginRequest);
     }
 
     @Operation(summary = "Récupération du profil de l'utilisateur connecté")
@@ -100,10 +97,10 @@ public class AuthController {
     }
     )
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> me(@AuthenticationPrincipal Long userId) {
+    public UserResponse me(@AuthenticationPrincipal Long userId) {
         log.info("call /me");
         User user = userService.getUser(userId);
-        return ResponseEntity.ok(userMapper.toUserResponse(user));
+        return userMapper.toUserResponse(user);
     }
 
 }

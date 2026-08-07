@@ -55,7 +55,7 @@ public class RentalController {
         }
     )
     @GetMapping
-    public ResponseEntity<RentalsResponse> getAll() {
+    public RentalsResponse getAll() {
         log.info("call /getAll rentals");
         List<Rental> rentals = this.rentalService.getAll();
         List<RentalResponse> rentalsReponse = rentals
@@ -63,7 +63,7 @@ public class RentalController {
                 .map(rentalMapper::toRentalResponse)
                 .toList();
 
-        return  ResponseEntity.status(HttpStatus.OK).body(new RentalsResponse(rentalsReponse));
+        return new RentalsResponse(rentalsReponse);
     }
 
 
@@ -85,10 +85,10 @@ public class RentalController {
         }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<RentalResponse> getById(@Positive @NotNull @PathVariable Long id) {
+    public RentalResponse getById(@Positive @NotNull @PathVariable Long id) {
         log.info("call /getById id {}", id);
         Rental rental = this.rentalService.getById(id);
-        return ResponseEntity.ok(rentalMapper.toRentalResponse(rental));
+        return rentalMapper.toRentalResponse(rental);
     }
 
     @Operation(summary = "Création d'une location")
@@ -133,14 +133,13 @@ public class RentalController {
         }
     )
     @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<ConfirmResponse> update(
+    public ConfirmResponse update(
         @Valid @ModelAttribute RentalRequest rentalRequest,
         @Positive @NotNull @PathVariable Long id
     ) {
         log.info("call /update id {}", id);
         rentalService.update(rentalRequest, id);
-        ConfirmResponse confirmResponse = new ConfirmResponse("Rental updated !");
-        return ResponseEntity.status(HttpStatus.OK).body(confirmResponse);
+        return new ConfirmResponse("Rental updated !");
     }
 
 
