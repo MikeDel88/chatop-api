@@ -31,17 +31,24 @@ API REST développée avec Spring Boot pour l'application ChaTop, un portail de 
 
 La configuration de l'application (`src/main/resources/application.properties`) repose entièrement sur des **variables d'environnement** : aucune valeur par défaut n'est définie dans le projet.
 
-| Variable       | Description                                                |
-|----------------|------------------------------------------------------------|
-| `DB_URL`       | URL JDBC de connexion à la base MySQL                      |
-| `DB_USER`      | Utilisateur de la base de données                          |
-| `DB_PASSWORD`  | Mot de passe de la base de données                         |
-| `DB_DRIVER`    | Classe du driver JDBC MySQL                                |
-| `JWT_SECRET`   | Clé secrète utilisée pour signer les tokens JWT            |
-| `SERVER_PORT`  | Port d'écoute du serveur Spring Boot (3001 pour le projet) |
-| `BASE_URL`     | URL de base de l'API (utilisée pour générer des liens)     |
+| Variable       | Description                                                          |
+|----------------|-----------------------------------------------------------------------|
+| `DB_URL`       | URL JDBC de connexion à la base MySQL                                 |
+| `DB_USER`      | Utilisateur de la base de données                                     |
+| `DB_PASSWORD`  | Mot de passe de la base de données                                    |
+| `DB_DRIVER`    | Classe du driver JDBC MySQL                                           |
+| `JWT_SECRET`   | Clé secrète utilisée pour signer les tokens JWT                       |
+| `DOMAINS`      | Origines autorisées pour les requêtes CORS, séparées par des virgules |
+| `SERVER_PORT`  | Port d'écoute du serveur Spring Boot (3001 pour le projet)            |
+| `BASE_URL`     | URL de base de l'API (utilisée pour générer des liens)                |
 
-Exemple de valeurs pour un environnement local :
+### Méthode recommandée (développement local) : fichier `.env`
+
+Un gabarit est fourni dans `src/main/resources/.env.example`. Copiez-le en `.env`, dans le même dossier, puis renseignez vos valeurs :
+
+```bash
+cp src/main/resources/.env.example src/main/resources/.env
+```
 
 ```
 DB_URL=jdbc:mysql://localhost:3306/chatop_db
@@ -49,11 +56,16 @@ DB_USER=chatop_user
 DB_PASSWORD=changeme
 DB_DRIVER=com.mysql.cj.jdbc.Driver
 JWT_SECRET=une_chaine_secrete_longue_et_aleatoire
+DOMAINS=http://localhost:4200
 SERVER_PORT=3001
 BASE_URL=http://localhost:3001
 ```
 
-Ces variables doivent être définies dans l'environnement avant de lancer l'application :
+Grâce à `spring.config.import=optional:classpath:.env`, ce fichier est chargé automatiquement au démarrage de l'application (aucune variable à exporter manuellement). Le fichier `.env` contient des secrets : ne le committez jamais.
+
+### Méthode alternative : variables d'environnement
+
+Sans fichier `.env` (par exemple en CI/production), les mêmes variables peuvent être définies directement dans l'environnement avant de lancer l'application :
 
 - **Windows (PowerShell)** :
   ```powershell
@@ -62,6 +74,7 @@ Ces variables doivent être définies dans l'environnement avant de lancer l'app
   $env:DB_PASSWORD="changeme"
   $env:DB_DRIVER="com.mysql.cj.jdbc.Driver"
   $env:JWT_SECRET="une_chaine_secrete_longue_et_aleatoire"
+  $env:DOMAINS="http://localhost:4200"
   $env:SERVER_PORT="3001"
   $env:BASE_URL="http://localhost:3001"
   ```
@@ -73,6 +86,7 @@ Ces variables doivent être définies dans l'environnement avant de lancer l'app
   export DB_PASSWORD=changeme
   export DB_DRIVER=com.mysql.cj.jdbc.Driver
   export JWT_SECRET=une_chaine_secrete_longue_et_aleatoire
+  export DOMAINS=http://localhost:4200
   export SERVER_PORT=3001
   export BASE_URL=http://localhost:3001
   ```

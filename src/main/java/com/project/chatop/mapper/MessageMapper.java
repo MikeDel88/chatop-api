@@ -14,9 +14,6 @@ public class MessageMapper {
         log.info("toCreateMessage : {}", messageRequest);
         log.debug("toCreateMessage : {}", rental);
 
-        if(messageRequest == null) {
-            return null;
-        }
         Message message = new Message();
         message.setUser(rental.getOwner());
         message.setRental(rental);

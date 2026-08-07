@@ -18,24 +18,6 @@ import java.nio.file.InvalidPathException;
 @RestControllerAdvice(assignableTypes = RentalController.class)
 public class RentalExceptionHandler {
 
-    @ExceptionHandler(RentalNotFoundException.class)
-    public ProblemDetail handlerRentalNotFound(RentalNotFoundException exception) {
-        log.error("handleRentalNotFound : {}", exception.getMessage());
-        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
-    }
-
-    @ExceptionHandler(RentalNotCreatedException.class)
-    public ProblemDetail handlerRentalNotCreated(RentalNotCreatedException exception) {
-        log.error("handleRentalNotCreated : {}", exception.getMessage());
-        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
-    }
-
-    @ExceptionHandler(RentalNotUpdatedException.class)
-    public ProblemDetail handlerRentalNotUpdated(RentalNotUpdatedException exception) {
-        log.error("handleRentalNotUpdated : {}", exception.getMessage());
-        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
-    }
-
     @ExceptionHandler({IOException.class, InvalidPathException.class})
     public ProblemDetail handlerIOException(Exception exception) {
         log.error("handlerIOException : {}", exception.getMessage());

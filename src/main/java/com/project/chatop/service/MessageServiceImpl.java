@@ -8,15 +8,13 @@ import com.project.chatop.port.repository.MessageRepository;
 import com.project.chatop.dto.request.MessageRequest;
 import com.project.chatop.exception.MessageNotCreatedException;
 import com.project.chatop.entity.Rental;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-/**
- * MessageService qui permet la création d'un message lié à un rental en base de données.
- */
+
 @Log4j2
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -35,14 +33,6 @@ public class MessageServiceImpl implements MessageService {
         this.messageRepository = messageRepository;
     }
 
-    /**
-     * Création d'un message affilié à un rental et un user.
-     * On récupère si le rental existe.
-     * On récupère si le user de la session côté front existe.
-     * @param messageRequest DTO qui contient user_id et rental_id.
-     * @param userId l'id de l'utilisateur authentifié par l'application.
-     * @return Message
-     */
     @Transactional
     public Message create(MessageRequest messageRequest, Long userId) {
         log.info("MessageService : create");

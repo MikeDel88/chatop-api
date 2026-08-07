@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(assignableTypes = MessageController.class)
 public class MessageExceptionHandler {
 
-    @ExceptionHandler(MessageNotCreatedException.class)
-    public ProblemDetail handlerMessageNotCreated(MessageNotCreatedException exception) {
+    @ExceptionHandler({MessageNotCreatedException.class})
+    public ProblemDetail handlerMessageNotCreated(Exception exception) {
         log.error("handlerMessageNotCreated : {}", exception.getMessage());
-        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
 }

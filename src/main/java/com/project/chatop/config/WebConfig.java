@@ -3,7 +3,6 @@ package com.project.chatop.config;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -30,17 +29,4 @@ public class WebConfig implements WebMvcConfigurer {
                 .setCachePeriod(3600);
     }
 
-    /**
-     * Protège l'accès aux images depuis du JS côté front via fetch()
-     * cache par le client 1 heure.
-     * @param registry CorsRegistry
-     */
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/images/**")
-                .allowedOrigins("http://localhost:4200")
-                .allowedMethods("GET", "HEAD")
-                .allowedHeaders("*")
-                .maxAge(3600);
-    }
 }
