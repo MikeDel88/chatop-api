@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.log4j.Log4j2;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,8 @@ import java.util.List;
 @Component
 public class ImageFilter extends OncePerRequestFilter {
 
-    private static final List<String> ALLOWED_REFERERS = List.of("http://localhost");
+    @Value("#{'${app.api.domains_authorization}'.split(',')}")
+    private List<String> allowedReferers;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -37,7 +39,7 @@ public class ImageFilter extends OncePerRequestFilter {
             String referer = request.getHeader("Referer");
 
             boolean isAllowed = referer != null &&
-                    ALLOWED_REFERERS.stream().anyMatch(referer::startsWith);
+                    allowedReferers.stream().anyMatch(referer::startsWith);
 
             if (!isAllowed) {
                 log.error("Forbidden request to from referer");
