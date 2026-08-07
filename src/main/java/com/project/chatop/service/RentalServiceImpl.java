@@ -9,7 +9,7 @@ import com.project.chatop.port.repository.RentalRepository;
 import com.project.chatop.dto.request.RentalRequest;
 import com.project.chatop.exception.RentalNotFoundException;
 import com.project.chatop.entity.User;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -45,6 +45,7 @@ public class RentalServiceImpl implements RentalService {
      * Récupère la liste des rentals existant en base de données.
      * @return List<Rental> la liste des rentals.
      */
+    @Transactional(readOnly = true)
     public List<Rental> getAll() {
         log.info("RentalService : getAll");
         return this.rentalRepository.findAll();
@@ -55,6 +56,7 @@ public class RentalServiceImpl implements RentalService {
      * @param id identifiant du rental
      * @return Rental
      */
+    @Transactional(readOnly = true)
     public Rental getById(Long id) {
         log.info("RentalService : getById {}", id);
         return this.rentalRepository.findRentalById(id).orElseThrow(RentalNotFoundException::new);
@@ -72,7 +74,7 @@ public class RentalServiceImpl implements RentalService {
      * @return Rental créé et sauvegardé en base de données.
      */
     @SneakyThrows(IOException.class)
-    @Transactional(rollbackOn = {IOException.class})
+    @Transactional(rollbackFor = IOException.class)
     public Rental create(RentalRequest rentalRequest, Long userId) {
         log.info("RentalService : create {} | id : {}", rentalRequest, userId);
         User owner =  this.userService.getUser(userId);

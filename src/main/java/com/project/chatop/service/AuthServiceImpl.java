@@ -10,9 +10,9 @@ import com.project.chatop.exception.BadAuthenticationException;
 import com.project.chatop.mapper.UserMapper;
 import com.project.chatop.entity.User;
 import com.project.chatop.port.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service qui gère l'authentification et l'accès au profil de l'utilisateur connecté.
@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
      * @param registerRequest DTO d'entrée pour l'enregistrement.
      * @return AuthResponse
      */
-    @Transactional(rollbackOn = BadAuthenticationException.class)
+    @Transactional(rollbackFor = BadAuthenticationException.class)
     public AuthResponse setRegister(RegisterRequest registerRequest) {
         log.info("AuthService : Enregistrement de l'utilisateur");
         log.debug("register datas {}", registerRequest);
@@ -63,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
      * @param loginRequest DTO d'entrée pour la connexion.
      * @return AuthResponse
      */
+    @Transactional(readOnly = true)
     public AuthResponse setLogin(LoginRequest loginRequest) {
         log.info("AuthService : Connexion de l'utilisateur");
         log.debug("login datas {}", loginRequest);

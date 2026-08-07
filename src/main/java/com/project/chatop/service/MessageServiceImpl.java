@@ -8,7 +8,7 @@ import com.project.chatop.port.repository.MessageRepository;
 import com.project.chatop.dto.request.MessageRequest;
 import com.project.chatop.exception.MessageNotCreatedException;
 import com.project.chatop.entity.Rental;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
