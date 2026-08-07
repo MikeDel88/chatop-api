@@ -1,99 +1,42 @@
 package com.project.chatop.service;
 
 import com.project.chatop.port.service.JwtService;
-import com.project.chatop.exception.InvalidTokenException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
+import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-import java.util.Base64;
-import java.util.Date;
-
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Log4j2
 @Service
 public class JwtServiceImpl implements JwtService {
 
-     private final SecretKey secretKey;
+    private final JwtEncoder jwtEncoder;
 
-    private final String keyType = "type";
-
-    private enum JWT_TYPE {
-        ACCESS
+    public JwtServiceImpl(JwtEncoder jwtEncoder) {
+        this.jwtEncoder = jwtEncoder;
     }
 
-    public JwtServiceImpl(@Value("${jwt.secret}") String jwtSecret) {
-        byte[] jwtDecode = Base64.getDecoder().decode(jwtSecret);
-        this.secretKey = Keys.hmacShaKeyFor(jwtDecode);
-    }
-
-
+    @Override
     public String generateAccessToken(String userId) {
         log.info("JWT Service : generateAccessToken");
-        Long expirationTime = 30L * 24 * 60 * 60 * 1000L;
-        String token = generateToken(userId, expirationTime);
+        Instant now = Instant.now();
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .subject(userId)
+                .issuedAt(now)
+                .expiresAt(now.plus(30, ChronoUnit.DAYS))
+                .build();
+
+        JwsHeader header = JwsHeader.with(SignatureAlgorithm.RS256).build();
+        String token = jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
+
         log.debug("JWT Service : Token de l'utilisateur {}", token);
         return token;
-    }
-
-
-    public Boolean validateAccessToken(String token) {
-        log.info("JWT Service : validateAccessToken");
-
-        Claims claims = this.parseAllClaims(token);
-        log.debug("JWT Service : Claims de l'utilisateur {}", claims);
-
-        if(claims == null)
-            return false;
-
-        if(!claims.containsKey(this.keyType) || !(claims.get(this.keyType) instanceof String tokenType))
-            return false;
-
-        return tokenType.equalsIgnoreCase(JWT_TYPE.ACCESS.name());
-    }
-
-
-    public String getUserIdFromToken(String token) {
-        log.info("JWT Service : getUserIdFromToken");
-        Claims claims = this.parseAllClaims(token);
-
-        if(claims == null)
-            throw new InvalidTokenException();
-
-        return claims.getSubject();
-    }
-
-    private String generateToken(String subject, Long expiry) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expiry);
-        return Jwts.builder()
-                .subject(subject)
-                .claim(this.keyType, JWT_TYPE.ACCESS)
-                .issuedAt(now)
-                .expiration(expiryDate)
-                .signWith(secretKey, Jwts.SIG.HS256)
-                .compact();
-    }
-
-    private Claims parseAllClaims(String token) {
-        String rawToken = token;
-
-        if(token.startsWith("Bearer ")) {
-            rawToken = token.substring(7);
-        }
-
-        try {
-            return Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(rawToken)
-                    .getPayload();
-        } catch(Exception e) {
-            return null;
-        }
     }
 }

@@ -1,30 +1,21 @@
 package com.project.chatop.config;
 
 import com.project.chatop.security.ImageFilter;
-import com.project.chatop.security.JwtAuthFilter;
+import com.project.chatop.security.JwtAccessDeniedHandler;
+import com.project.chatop.security.JwtAuthenticationEntryPoint;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @Log4j2
 @Configuration
 public class SecurityConfig {
-
-    private final JwtAuthFilter jwtAuthFilter;
-    private final ImageFilter imageFilter;
-
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter, ImageFilter imageFilter) {
-        this.jwtAuthFilter = jwtAuthFilter;
-        this.imageFilter = imageFilter;
-    }
 
     /**
      * Création du filter chain pour les requêtes Http
@@ -36,10 +27,18 @@ public class SecurityConfig {
      * Ajout d'un filtre pour vérifier le token et enregistrer l'authentification.
      * Ajout d'un filter pour vérifier l'origin "Referer" qui cherche à charger l'image.
      * @param httpSecurity HttpSecurity
+     * @param jwtEntryPoint JwtAuthenticationEntryPoint
+     * @param jwtAccessDeniedHandler JwtAccessDeniedHandler
+     * @param imageFilter ImageFilter
      * @return HttpSecurity configuré
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
+    public SecurityFilterChain filterChain(
+            HttpSecurity httpSecurity,
+            JwtAuthenticationEntryPoint jwtEntryPoint,
+            JwtAccessDeniedHandler jwtAccessDeniedHandler,
+            ImageFilter imageFilter
+    ) {
         log.info("Security Filter Chain");
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
@@ -60,12 +59,15 @@ public class SecurityConfig {
                                 .requestMatchers("/images/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .exceptionHandling ( configurer ->
-                    configurer
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(Customizer.withDefaults())
+                        .authenticationEntryPoint(jwtEntryPoint)
                 )
-                .addFilterBefore(this.jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(this.imageFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(jwtEntryPoint)
+                        .accessDeniedHandler(jwtAccessDeniedHandler)
+                )
+                .addFilterBefore(imageFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

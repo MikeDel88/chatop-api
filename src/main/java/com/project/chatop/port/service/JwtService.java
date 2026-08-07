@@ -1,30 +1,15 @@
 package com.project.chatop.port.service;
 
 /**
- * JwtService permet la génération du token.
- * Sa validité et récupérer le subject du token.
+ * JwtService permet la génération du token d'accès de l'utilisateur.
+ * La validation et le décodage du token sont désormais gérés nativement
+ * par Spring Security (JwtDecoder / OAuth2 Resource Server).
  */
 public interface JwtService {
     /**
-     * On génère un token avec une expirationTime de xx jours.
+     * On génère un token avec une expirationTime de 30 jours.
      * @param userId utilisé dans les claims comme subject.
      * @return String le token généré.
      */
     String generateAccessToken(String userId);
-    /**
-     * Vérification de la validité du token.
-     * Si les claims ou le type n'est pas bon, on renvoi false.
-     * @param token du header de la requête.
-     * @return Boolean si le token est valide.
-     */
-    Boolean validateAccessToken(String token);
-    /**
-     * Récupère l'id subject inclus dans le token.
-     * Lève une InvalidTokenException si les claims sont null.
-     * @param token du header de la requête.
-     * @return String l'identifiant Id subject.
-     */
-    String getUserIdFromToken(String token);
 }
-
-

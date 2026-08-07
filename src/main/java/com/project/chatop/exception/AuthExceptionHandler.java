@@ -1,7 +1,6 @@
 package com.project.chatop.exception;
 
 
-import com.project.chatop.port.service.JwtService;
 import com.project.chatop.controller.AuthController;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.Ordered;
@@ -16,18 +15,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @Log4j2
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@RestControllerAdvice(assignableTypes = {AuthController.class, JwtService.class})
+@RestControllerAdvice(assignableTypes = {AuthController.class})
 public class AuthExceptionHandler {
 
     @ExceptionHandler(BadAuthenticationException.class)
     public ProblemDetail handleBadAuthentication(BadAuthenticationException exception) {
         log.error("handleBadAuthentication : {}", exception.getMessage());
-        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
-    }
-
-    @ExceptionHandler(InvalidTokenException.class)
-    public ProblemDetail handleInvalidToken(InvalidTokenException exception) {
-        log.error("handleInvalidToken : {}", exception.getMessage());
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
     }
 }

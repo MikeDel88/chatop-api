@@ -17,6 +17,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,11 +52,11 @@ public class MessageController {
     )
     @PostMapping
     public ResponseEntity<ConfirmResponse> sendMessage(
-            @AuthenticationPrincipal Long userId,
+            @AuthenticationPrincipal Jwt jwt,
             @Valid @RequestBody MessageRequest messageRequest
     ) {
         log.info("call /messages");
-        messageService.create(messageRequest, userId);
+        messageService.create(messageRequest, Long.valueOf(jwt.getSubject()));
         ConfirmResponse confirmResponse = new ConfirmResponse("Message send with success");
         return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
     }

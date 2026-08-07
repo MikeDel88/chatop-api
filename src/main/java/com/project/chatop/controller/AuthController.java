@@ -22,6 +22,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -97,8 +98,9 @@ public class AuthController {
     }
     )
     @GetMapping("/me")
-    public UserResponse me(@AuthenticationPrincipal Long userId) {
+    public UserResponse me(@AuthenticationPrincipal Jwt jwt) {
         log.info("call /me");
+        Long userId = Long.valueOf(jwt.getSubject());
         User user = userService.getUser(userId);
         return userMapper.toUserResponse(user);
     }
