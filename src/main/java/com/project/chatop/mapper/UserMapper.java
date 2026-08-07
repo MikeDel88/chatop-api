@@ -1,51 +1,22 @@
 package com.project.chatop.mapper;
 
-
-import com.project.chatop.security.HashEncoder;
-import com.project.chatop.entity.User;
 import com.project.chatop.dto.request.RegisterRequest;
 import com.project.chatop.dto.response.UserResponse;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Component;
+import com.project.chatop.entity.User;
+import com.project.chatop.security.HashEncoder;
+import org.mapstruct.Context;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import java.time.format.DateTimeFormatter;
+@Mapper(componentModel = "spring")
+public interface UserMapper {
 
-@Log4j2
-@Component
-public class UserMapper {
+    @Mapping(target = "password", expression = "java(hashEncoder.encode(registerRequest.password()))")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    User toUser(RegisterRequest registerRequest, @Context HashEncoder hashEncoder);
 
-    public User toUser(RegisterRequest registerRequest, HashEncoder hashEncoder) {
-        log.info("toUser {}", registerRequest);
-        log.debug("toUser {}", hashEncoder);
-
-        if(registerRequest == null) {
-            return null;
-        }
-        User user = new User();
-        user.setEmail(registerRequest.email());
-        user.setName(registerRequest.name());
-        user.setPassword(hashEncoder.encode(registerRequest.password()));
-        log.debug("toUser : {}", user);
-        return user;
-    }
-
-    public UserResponse toUserResponse(User user) {
-        log.info("toUserResponse : {}", user);
-        if(user == null) {
-            return null;
-        }
-
-        String europeanDatePattern = "yyyy/MM/dd";
-        DateTimeFormatter europeanDateFormatter = DateTimeFormatter.ofPattern(europeanDatePattern);
-
-        UserResponse userResponse = new UserResponse(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                europeanDateFormatter.format(user.getCreatedAt()),
-                europeanDateFormatter.format(user.getUpdatedAt())
-        );
-        log.debug("toUserResponse : {}", userResponse);
-        return userResponse;
-    }
+    @Mapping(target = "created_at", source = "createdAt", dateFormat = "yyyy/MM/dd")
+    @Mapping(target = "updated_at", source = "updatedAt", dateFormat = "yyyy/MM/dd")
+    UserResponse toUserResponse(User user);
 }

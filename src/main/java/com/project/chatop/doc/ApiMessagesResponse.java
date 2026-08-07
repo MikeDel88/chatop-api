@@ -30,6 +30,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @ApiProblemDetail(code = "400", summary = "Message Not Created")
 @ApiBodyInvalid
 @ApiProblemDetail(code = "404", summary = "Rental non trouvé")
+@ApiProblemDetail(code = "404", summary = "User non trouvé")
 @ApiErrorServer
 public @interface ApiMessagesResponse {}
 

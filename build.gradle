@@ -8,6 +8,10 @@ group = 'com.project'
 version = '0.0.1-SNAPSHOT'
 description = 'ChaTop_Api'
 
+ext {
+    mapstructVersion = '1.6.3'
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -24,11 +28,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // MapStruct
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
     // Lombok + Logger Log4j2
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     // Swagger 2 - OpenAPI
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
