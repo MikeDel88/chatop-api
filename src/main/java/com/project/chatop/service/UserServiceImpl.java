@@ -8,9 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * UserService permet de récupérer les informations de profil d'un utilisateur.
- */
+
 @Log4j2
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,11 +19,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Récupère en base de données les informations d'un utilisateur.
-     * @param userId identifiant de l'utilisateur à trouvé.
-     * @return User.
-     */
     @Transactional(readOnly = true)
     public User getUser(Long userId) {
         log.info("UserService : getUser {}", userId);

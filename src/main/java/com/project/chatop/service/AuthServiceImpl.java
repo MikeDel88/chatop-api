@@ -14,9 +14,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Service qui gère l'authentification et l'accès au profil de l'utilisateur connecté.
- */
 @Log4j2
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -38,14 +35,6 @@ public class AuthServiceImpl implements AuthService {
         this.jwtService = jwtService;
     }
 
-    /**
-     * Enregistrement de l'utilisateur.
-     * On mappe les données de RegisterRequest vers User en encodant le mot de passe.
-     * On enregistre l'utilisateur en base de données.
-     * Si l'authentification est bonne, on crée un token et on le renvoie dans AuthResponse.
-     * @param registerRequest DTO d'entrée pour l'enregistrement.
-     * @return AuthResponse
-     */
     @Transactional(rollbackFor = BadAuthenticationException.class)
     public AuthResponse setRegister(RegisterRequest registerRequest) {
         log.info("AuthService : Enregistrement de l'utilisateur");
@@ -55,14 +44,6 @@ public class AuthServiceImpl implements AuthService {
         return createResponse(userSaved);
     }
 
-    /**
-     * Login de l'utilisateur.
-     * On cherche si l'utilisateur existe en base de données.
-     * On regarde l'authentification via isAuthenticated (que l'user soit null ou pas, on applique la même logique pour éviter de savoir si l'utilisateur existe ou pas).
-     * Si l'authentification est bonne, on crée un token et on le renvoie dans AuthResponse.
-     * @param loginRequest DTO d'entrée pour la connexion.
-     * @return AuthResponse
-     */
     @Transactional(readOnly = true)
     public AuthResponse setLogin(LoginRequest loginRequest) {
         log.info("AuthService : Connexion de l'utilisateur");

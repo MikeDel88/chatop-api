@@ -13,10 +13,7 @@ import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
 
-/**
- * JwtService permet la génération du token.
- * Sa validité et récupérer le subject du token.
- */
+
 @Log4j2
 @Service
 public class JwtServiceImpl implements JwtService {
@@ -34,11 +31,7 @@ public class JwtServiceImpl implements JwtService {
         this.secretKey = Keys.hmacShaKeyFor(jwtDecode);
     }
 
-    /**
-     * On génère un token avec une expirationTime de xx jours.
-     * @param userId utilisé dans les claims comme subject.
-     * @return String le token généré.
-     */
+
     public String generateAccessToken(String userId) {
         log.info("JWT Service : generateAccessToken");
         Long expirationTime = 30L * 24 * 60 * 60 * 1000L;
@@ -47,12 +40,7 @@ public class JwtServiceImpl implements JwtService {
         return token;
     }
 
-    /**
-     * Vérification de la validité du token.
-     * Si les claims ou le type n'est pas bon, on renvoi false.
-     * @param token du header de la requête.
-     * @return Boolean si le token est valide.
-     */
+
     public Boolean validateAccessToken(String token) {
         log.info("JWT Service : validateAccessToken");
 
@@ -68,12 +56,7 @@ public class JwtServiceImpl implements JwtService {
         return tokenType.equalsIgnoreCase(JWT_TYPE.ACCESS.name());
     }
 
-    /**
-     * Récupère l'id subject inclus dans le token.
-     * Lève une InvalidTokenException si les claims sont null.
-     * @param token du header de la requête.
-     * @return String l'identifiant Id subject.
-     */
+
     public String getUserIdFromToken(String token) {
         log.info("JWT Service : getUserIdFromToken");
         Claims claims = this.parseAllClaims(token);
