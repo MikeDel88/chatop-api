@@ -25,6 +25,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @RestController
 @Log4j2
 @RequestMapping("/api/auth")
@@ -100,7 +102,7 @@ public class AuthController {
     @GetMapping("/me")
     public UserResponse me(@AuthenticationPrincipal Jwt jwt) {
         log.info("call /me");
-        Long userId = Long.valueOf(jwt.getSubject());
+        Long userId = Long.valueOf(Objects.requireNonNull(jwt.getSubject()));
         User user = userService.getUser(userId);
         return userMapper.toUserResponse(user);
     }

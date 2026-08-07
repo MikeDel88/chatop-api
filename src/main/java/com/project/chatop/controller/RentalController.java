@@ -28,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Log4j2
@@ -113,7 +114,7 @@ public class RentalController {
         @Valid @ModelAttribute RentalRequest rentalRequest
     ) {
         log.info("call /create");
-        rentalService.create(rentalRequest, Long.valueOf(jwt.getSubject()));
+        rentalService.create(rentalRequest, Long.valueOf(Objects.requireNonNull(jwt.getSubject())));
         ConfirmResponse confirmResponse = new ConfirmResponse("Rental created !");
         return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
     }

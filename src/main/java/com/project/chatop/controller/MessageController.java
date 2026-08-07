@@ -5,7 +5,6 @@ import com.project.chatop.dto.response.ErrorResponse;
 import com.project.chatop.dto.response.ErrorsResponse;
 import com.project.chatop.port.service.MessageService;
 import com.project.chatop.dto.request.MessageRequest;
-import com.project.chatop.exception.MessageNotCreatedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +21,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 @RestController
 @Log4j2
@@ -56,7 +57,7 @@ public class MessageController {
             @Valid @RequestBody MessageRequest messageRequest
     ) {
         log.info("call /messages");
-        messageService.create(messageRequest, Long.valueOf(jwt.getSubject()));
+        messageService.create(messageRequest, Long.valueOf(Objects.requireNonNull(jwt.getSubject())));
         ConfirmResponse confirmResponse = new ConfirmResponse("Message send with success");
         return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
     }
