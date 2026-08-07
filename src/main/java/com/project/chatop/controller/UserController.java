@@ -51,9 +51,9 @@ public class UserController {
         }
     )
     @GetMapping("/{id}")
-    public UserResponse getUser(@Positive @NotNull @PathVariable String id) {
+    public UserResponse getUser(@Positive @NotNull @PathVariable Long id) {
         log.info("call /getUser id {}", id);
-        User user = this.userService.getUser(Long.valueOf(id));
+        User user = this.userService.getUser(id);
         return userMapper.toUserResponse(user);
     }
 }
