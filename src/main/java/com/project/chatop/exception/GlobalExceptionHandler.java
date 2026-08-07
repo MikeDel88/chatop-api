@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
-import java.util.Map;
 
 @Log4j2
 @Order()
@@ -24,14 +23,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(exception = MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail handleValidation(MethodArgumentNotValidException ex) {
+    public BodyProblemDetail handleValidation(MethodArgumentNotValidException ex) {
         log.error("handleValidation : {}", ex.getMessage());
         List<ErrorResponse> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(f -> new ErrorResponse(f.getField() + " " + f.getDefaultMessage()))
                 .toList();
         ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        pd.setProperties(Map.of("errors", errors));
-        return pd;
+        BodyProblemDetail bpd = BodyProblemDetail.from(pd);
+        bpd.setErrors(errors);
+
+        return bpd;
     }
 
     @ExceptionHandler({ValidationException.class, DataAccessException.class, DataIntegrityViolationException.class})

@@ -1,15 +1,9 @@
 package com.project.chatop.controller;
 
+import com.project.chatop.doc.ApiMessagesResponse;
 import com.project.chatop.dto.response.ConfirmResponse;
-import com.project.chatop.dto.response.ErrorResponse;
-import com.project.chatop.dto.response.ErrorsResponse;
 import com.project.chatop.port.service.MessageService;
 import com.project.chatop.dto.request.MessageRequest;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
@@ -36,21 +30,7 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-    @Operation(summary = "Envoi de message au propriétaire de la location")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Le message a été créée avec succès",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ConfirmResponse.class)) }),
-            @ApiResponse(responseCode = "400", description = "Le Body est invalide",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorsResponse.class))}),
-            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé ou Message non créee",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
-                    content = @Content),
-    }
-    )
+    @ApiMessagesResponse
     @PostMapping
     public ResponseEntity<ConfirmResponse> sendMessage(
             @AuthenticationPrincipal Jwt jwt,

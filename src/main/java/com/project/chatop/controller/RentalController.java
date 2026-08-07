@@ -1,19 +1,16 @@
 package com.project.chatop.controller;
 
+import com.project.chatop.doc.ApiRentalCreateResponse;
+import com.project.chatop.doc.ApiRentalResponse;
+import com.project.chatop.doc.ApiRentalUpdateResponse;
+import com.project.chatop.doc.ApiRentalsResponse;
 import com.project.chatop.dto.response.ConfirmResponse;
-import com.project.chatop.dto.response.ErrorResponse;
-import com.project.chatop.dto.response.ErrorsResponse;
 import com.project.chatop.mapper.RentalMapper;
 import com.project.chatop.port.service.RentalService;
 import com.project.chatop.entity.Rental;
 import com.project.chatop.dto.request.RentalRequest;
 import com.project.chatop.dto.response.RentalResponse;
 import com.project.chatop.dto.response.RentalsResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -45,17 +42,7 @@ public class RentalController {
         this.rentalMapper = rentalMapper;
     }
 
-    @Operation(summary = "Récupération de la liste des locations.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Les locations ont bien été envoyées ou tableau vide.",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RentalsResponse.class)) }),
-            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
-                    content = @Content),
-        }
-    )
+    @ApiRentalsResponse
     @GetMapping
     public RentalsResponse getAll() {
         log.info("call /getAll rentals");
@@ -69,23 +56,7 @@ public class RentalController {
     }
 
 
-    @Operation(summary = "Récupération d'une location par son identifiant.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "La location a bien été trouvée et envoyée",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RentalResponse.class)) }),
-            @ApiResponse(responseCode = "400", description = "Id invalide",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorsResponse.class)) }),
-            @ApiResponse(responseCode = "404", description = "Location introuvable",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class)) }),
-            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
-                    content = @Content),
-        }
-    )
+    @ApiRentalResponse
     @GetMapping("/{id}")
     public RentalResponse getById(@Positive @NotNull @PathVariable Long id) {
         log.info("call /getById id {}", id);
@@ -93,21 +64,7 @@ public class RentalController {
         return rentalMapper.toRentalResponse(rental);
     }
 
-    @Operation(summary = "Création d'une location")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "La location a été créée avec succès",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ConfirmResponse.class)) }),
-            @ApiResponse(responseCode = "400", description = "Le Body est invalide",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorsResponse.class))}),
-            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé ou Location non créee",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
-                    content = @Content),
-        }
-    )
+    @ApiRentalCreateResponse
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ConfirmResponse> create(
         @AuthenticationPrincipal Jwt jwt,
@@ -119,21 +76,7 @@ public class RentalController {
         return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
     }
 
-    @Operation(summary = "Mise à jour d'une location par son identifiant.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "La location a été mise à jour avec succès",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ConfirmResponse.class)) }),
-            @ApiResponse(responseCode = "400", description = "Body invalide ou Id invalide",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorsResponse.class))}),
-            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé ou Location non mise à jour",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "500", description = "Problème de réponse du serveur",
-                    content = @Content),
-        }
-    )
+    @ApiRentalUpdateResponse
     @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ConfirmResponse update(
         @Valid @ModelAttribute RentalRequest rentalRequest,
@@ -143,6 +86,5 @@ public class RentalController {
         rentalService.update(rentalRequest, id);
         return new ConfirmResponse("Rental updated !");
     }
-
 
 }
