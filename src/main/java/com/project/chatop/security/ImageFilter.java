@@ -1,10 +1,10 @@
 package com.project.chatop.security;
 
+import com.project.chatop.config.PropertiesConfig;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.log4j.Log4j2;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
@@ -24,8 +24,11 @@ import java.util.List;
 @Component
 public class ImageFilter extends OncePerRequestFilter {
 
-    @Value("#{'${app.api.domains_authorization}'.split(',')}")
-    private List<String> allowedReferers;
+    private final List<String> allowedReferers;
+
+    public ImageFilter(PropertiesConfig propertiesConfig) {
+        this.allowedReferers = List.of(propertiesConfig.domainsAuthorization().split(","));
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
