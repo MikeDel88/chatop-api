@@ -1,8 +1,8 @@
 package com.project.chatop.service;
 
+import com.project.chatop.config.PropertiesConfig;
 import com.project.chatop.port.service.PictureService;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,12 +18,13 @@ import java.util.UUID;
 @Service
 public class PictureServiceImpl implements PictureService {
 
-    @Value("${app.upload.dir}")
-    private String uploadDir;
+    private final String uploadDir;
+    private final String baseUrl;
 
-    @Value("${app.api.base-url}")
-    private String baseUrl;
-
+    public PictureServiceImpl(PropertiesConfig propertiesConfig) {
+        this.uploadDir = propertiesConfig.uploadDir();
+        this.baseUrl = propertiesConfig.baseUrl();
+    }
 
     public String saveImage(MultipartFile file) throws IOException {
 

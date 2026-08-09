@@ -1,7 +1,6 @@
 package com.project.chatop.config;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -12,8 +11,11 @@ import java.nio.file.Paths;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${app.upload.dir}")
-    private String uploadDir;
+    private final String uploadDir;
+
+    public WebConfig(PropertiesConfig propertiesConfig) {
+        this.uploadDir = propertiesConfig.uploadDir();
+    }
 
     /**
      * Permet d'accéder aux images stockées sur le serveur.
