@@ -1,8 +1,8 @@
 package com.project.chatop.config;
 
-import com.project.chatop.security.ImageFilter;
-import com.project.chatop.security.JwtAccessDeniedHandler;
-import com.project.chatop.security.JwtAuthenticationEntryPoint;
+import com.project.chatop.config.security.ImageFilter;
+import com.project.chatop.config.security.JwtAccessDeniedHandler;
+import com.project.chatop.config.security.JwtAuthenticationEntryPoint;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.project.chatop.security;
+package com.project.chatop.config.security;
 
 import com.project.chatop.config.PropertiesConfig;
 import jakarta.servlet.FilterChain;

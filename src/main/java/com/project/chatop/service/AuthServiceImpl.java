@@ -1,6 +1,6 @@
 package com.project.chatop.service;
 
-import com.project.chatop.security.HashEncoder;
+import com.project.chatop.config.security.HashEncoder;
 import com.project.chatop.port.service.AuthService;
 import com.project.chatop.port.service.JwtService;
 import com.project.chatop.dto.response.AuthResponse;
