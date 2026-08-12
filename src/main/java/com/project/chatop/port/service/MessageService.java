@@ -11,7 +11,7 @@ public interface MessageService {
      * Création d'un message affilié à un rental et un user.
      * On récupère si le rental existe.
      * On récupère si le user de la session côté front existe.
-     * @param messageRequest DTO qui contient user_id et rental_id.
+     * @param messageRequest DTO qui contient userId et rentalId.
      * @param userId l'id de l'utilisateur authentifié par l'application.
      * @return Message
      */

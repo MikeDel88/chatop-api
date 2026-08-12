@@ -3,7 +3,7 @@ package com.project.chatop.mapper;
 import com.project.chatop.dto.request.RegisterRequest;
 import com.project.chatop.dto.response.UserResponse;
 import com.project.chatop.entity.User;
-import com.project.chatop.security.HashEncoder;
+import com.project.chatop.config.security.HashEncoder;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

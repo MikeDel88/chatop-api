@@ -1,4 +1,4 @@
-package com.project.chatop.security;
+package com.project.chatop.config.security;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
