@@ -42,8 +42,8 @@ public class MessageServiceImpl implements MessageService {
     public Message create(MessageRequest messageRequest, Long userId) {
         log.info("MessageService : create");
 
-        Rental rental = rentalService.getById(messageRequest.rental_id());
-        if(!Objects.equals(userId, messageRequest.user_id())) {
+        Rental rental = rentalService.getById(messageRequest.rentalId());
+        if(!Objects.equals(userId, messageRequest.userId())) {
             throw new MessageNotCreatedException();
         }
         User user = this.userService.getUser(userId);

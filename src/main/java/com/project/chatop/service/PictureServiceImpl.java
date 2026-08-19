@@ -32,12 +32,14 @@ public class PictureServiceImpl implements PictureService {
         log.debug("Picture Service : Upload image file type {}", file.getContentType());
 
         if(file.isEmpty()) {
+            log.error("File is empty");
             throw new IOException("Failed to upload file");
         }
 
         String contentType = file.getContentType();
         assert contentType != null;
         if (!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
+            log.error("Only JPEG or PNG images are allowed");
             throw new IllegalArgumentException("Only JPEG or PNG images are allowed");
         }
 
@@ -48,6 +50,7 @@ public class PictureServiceImpl implements PictureService {
 
         String fileName = file.getOriginalFilename();
         if(fileName == null) {
+            log.error("Failed to upload file");
             throw new IOException("Failed to upload file");
         }
 

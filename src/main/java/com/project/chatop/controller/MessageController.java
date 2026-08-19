@@ -9,14 +9,12 @@ import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
+import java.security.Principal;
 
 @RestController
 @Log4j2
@@ -33,11 +31,11 @@ public class MessageController {
     @ApiMessagesResponse
     @PostMapping
     public ResponseEntity<ConfirmResponse> sendMessage(
-            @AuthenticationPrincipal Jwt jwt,
+            Principal principal,
             @Valid @RequestBody MessageRequest messageRequest
     ) {
         log.info("call /messages");
-        messageService.create(messageRequest, Long.valueOf(Objects.requireNonNull(jwt.getSubject())));
+        messageService.create(messageRequest, Long.valueOf(principal.getName()));
         ConfirmResponse confirmResponse = new ConfirmResponse("Message send with success");
         return ResponseEntity.status(HttpStatus.CREATED).body(confirmResponse);
     }

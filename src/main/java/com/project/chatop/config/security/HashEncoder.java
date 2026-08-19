@@ -1,4 +1,4 @@
-package com.project.chatop.security;
+package com.project.chatop.config.security;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

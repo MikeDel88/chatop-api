@@ -19,20 +19,10 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.PROTECTED)
     Long id;
-    @NotNull
-    @Column(nullable = false)
     String name;
-    @NotNull
-    @Column(nullable = false)
     Integer surface;
-    @NotNull
-    @Column(nullable = false)
     Integer price;
-    @NotNull
-    @Column(nullable = false)
     String picture;
-    @NotNull
-    @Column(nullable = false)
     String description;
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
